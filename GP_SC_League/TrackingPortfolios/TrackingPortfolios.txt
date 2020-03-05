@@ -1,0 +1,6 @@
+New Loop
+Player0
+ if(HaveQtdUnitsAttacking(Heavy,20)) (moveToUnit(Heavy,Ally,farthest) train(Light,50,Left)) (train(Light,50,Up)) for(u) (train(Light,50,Up,u))
+Player1
+ if(HaveQtdUnitsAttacking(Heavy,20)) (moveToUnit(Heavy,Ally,farthest) train(Light,50,Left)) (train(Light,50,Up)) for(u) (train(Light,50,Up,u))
+

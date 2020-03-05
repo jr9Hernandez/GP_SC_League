@@ -1,0 +1,306 @@
+Log - Generation = 0
+-- Population --
+Chromosome 36130 
+Value = 0
+Chromosome 8259 
+Value = 0
+Chromosome 6884 
+Value = 0
+Chromosome 45736 
+Value = 0
+Chromosome 234 
+Value = 0
+Chromosome 39819 
+Value = 0
+Chromosome 70634 
+Value = 0
+Chromosome 43980 
+Value = 0
+Chromosome 21708 
+Value = 0
+Chromosome 26445 
+Value = 0
+Chromosome 75791 
+Value = 0
+Chromosome 56945 
+Value = 0
+Chromosome 32625 
+Value = 0
+Chromosome 62929 
+Value = 0
+Chromosome 77525 
+Value = 0
+Chromosome 11062 
+Value = 0
+Chromosome 15770 
+Value = 0
+Chromosome 4700 
+Value = 0
+Chromosome 77181 
+Value = 0
+Chromosome 38109 
+Value = 0
+Chromosome 16798 
+Value = 0
+Chromosome 11902 
+Value = 0
+Chromosome 54975 
+Value = 0
+Chromosome 72446 
+Value = 0
+-- Population --
+Log - Generation = 1
+-- Population --
+Chromosome 5380 
+Value = 0
+Chromosome 17253 
+Value = 0
+Chromosome 16421 
+Value = 0
+Chromosome 73958 
+Value = 0
+Chromosome 51880 
+Value = 0
+Chromosome 16970 
+Value = 0
+Chromosome 78828 
+Value = 0
+Chromosome 33869 
+Value = 0
+Chromosome 1170 
+Value = 0
+Chromosome 57010 
+Value = 0
+Chromosome 8213 
+Value = 0
+Chromosome 52181 
+Value = 0
+Chromosome 59702 
+Value = 0
+Chromosome 48855 
+Value = 0
+Chromosome 46840 
+Value = 0
+Chromosome 48697 
+Value = 0
+Chromosome 36025 
+Value = 0
+Chromosome 9082 
+Value = 0
+Chromosome 63482 
+Value = 0
+Chromosome 64572 
+Value = 0
+Chromosome 6781 
+Value = 0
+Chromosome 40798 
+Value = 0
+Chromosome 75263 
+Value = 0
+Chromosome 17889 
+Value = 0
+-- Population --
+Log - Generation = 2
+-- Population --
+Chromosome 61058 
+Value = 0
+Chromosome 19525 
+Value = 0
+Chromosome 50053 
+Value = 0
+Chromosome 35879 
+Value = 0
+Chromosome 35978 
+Value = 0
+Chromosome 23402 
+Value = 0
+Chromosome 74863 
+Value = 0
+Chromosome 75982 
+Value = 0
+Chromosome 27088 
+Value = 0
+Chromosome 56528 
+Value = 0
+Chromosome 47312 
+Value = 0
+Chromosome 24336 
+Value = 0
+Chromosome 57840 
+Value = 0
+Chromosome 22353 
+Value = 0
+Chromosome 1266 
+Value = 0
+Chromosome 72402 
+Value = 0
+Chromosome 9044 
+Value = 0
+Chromosome 76532 
+Value = 0
+Chromosome 25206 
+Value = 0
+Chromosome 64919 
+Value = 0
+Chromosome 53721 
+Value = 0
+Chromosome 45662 
+Value = 0
+Chromosome 67871 
+Value = 0
+Chromosome 10944 
+Value = 0
+-- Population --
+Log - Generation = 3
+-- Population --
+Chromosome 28259 
+Value = 0
+Chromosome 43588 
+Value = 0
+Chromosome 50309 
+Value = 0
+Chromosome 6471 
+Value = 0
+Chromosome 35881 
+Value = 0
+Chromosome 28650 
+Value = 0
+Chromosome 42381 
+Value = 0
+Chromosome 30606 
+Value = 0
+Chromosome 39822 
+Value = 0
+Chromosome 34801 
+Value = 0
+Chromosome 3985 
+Value = 0
+Chromosome 22998 
+Value = 0
+Chromosome 38616 
+Value = 0
+Chromosome 27642 
+Value = 0
+Chromosome 45658 
+Value = 0
+Chromosome 45371 
+Value = 0
+Chromosome 75994 
+Value = 0
+Chromosome 15486 
+Value = 0
+Chromosome 2398 
+Value = 0
+Chromosome 26814 
+Value = 0
+Chromosome 69310 
+Value = 0
+Chromosome 49569 
+Value = 0
+Chromosome 50049 
+Value = 0
+Chromosome 54721 
+Value = 0
+-- Population --
+Log - Generation = 4
+-- Population --
+Chromosome 71300 
+Value = 0
+Chromosome 12327 
+Value = 0
+Chromosome 41767 
+Value = 0
+Chromosome 3656 
+Value = 0
+Chromosome 47304 
+Value = 0
+Chromosome 50411 
+Value = 0
+Chromosome 28715 
+Value = 0
+Chromosome 55438 
+Value = 0
+Chromosome 26671 
+Value = 0
+Chromosome 46288 
+Value = 0
+Chromosome 65296 
+Value = 0
+Chromosome 29746 
+Value = 0
+Chromosome 35157 
+Value = 0
+Chromosome 48885 
+Value = 0
+Chromosome 7605 
+Value = 0
+Chromosome 13943 
+Value = 0
+Chromosome 15479 
+Value = 0
+Chromosome 67577 
+Value = 0
+Chromosome 14328 
+Value = 0
+Chromosome 14623 
+Value = 0
+Chromosome 43616 
+Value = 0
+Chromosome 61536 
+Value = 0
+Chromosome 35745 
+Value = 0
+Chromosome 73344 
+Value = 0
+-- Population --
+Log - Generation = 5
+-- Population --
+Chromosome 10786 
+Value = 0
+Chromosome 49670 
+Value = 0
+Chromosome 67527 
+Value = 0
+Chromosome 26982 
+Value = 0
+Chromosome 54855 
+Value = 0
+Chromosome 12520 
+Value = 0
+Chromosome 78537 
+Value = 0
+Chromosome 47146 
+Value = 0
+Chromosome 16459 
+Value = 0
+Chromosome 79050 
+Value = 0
+Chromosome 46255 
+Value = 0
+Chromosome 39824 
+Value = 0
+Chromosome 35249 
+Value = 0
+Chromosome 45780 
+Value = 0
+Chromosome 13685 
+Value = 0
+Chromosome 7094 
+Value = 0
+Chromosome 6839 
+Value = 0
+Chromosome 51098 
+Value = 0
+Chromosome 53179 
+Value = 0
+Chromosome 48379 
+Value = 0
+Chromosome 21596 
+Value = 0
+Chromosome 75871 
+Value = 0
+Chromosome 14623 
+Value = 0
+Chromosome 18528 
+Value = 0
+-- Population --
