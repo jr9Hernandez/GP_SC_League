@@ -49,7 +49,9 @@ public class RoundRobinEliteandSampleEval implements RatePopulation {
 	ArrayList<String> SOA_arqs = new ArrayList<>();
 
 	ArrayList<Chromosome> ChromosomeSample = new ArrayList<>();
-	HashMap<Chromosome, BigDecimal> eliteIndividuals;
+	HashMap<Chromosome, BigDecimal> eliteMainAgents;
+	HashMap<Chromosome, BigDecimal> eliteMainExploiters;
+	HashMap<Chromosome, BigDecimal> eliteLeagueExploiters;
 
 	public RoundRobinEliteandSampleEval() {
 		super();
@@ -406,9 +408,9 @@ public class RoundRobinEliteandSampleEval implements RatePopulation {
 		HashMap<Chromosome, BigDecimal> elite=(HashMap<Chromosome, BigDecimal>)ps.sortByValue(population.getChromosomes());
 		ArrayList<Entry<Chromosome, BigDecimal>> arrayElite = new ArrayList<>();
 		
-		if(getEliteIndividuals().size()>0)
+		if(getEliteMainAgents().size()>0)
 		{
-			arrayElite.addAll(getEliteIndividuals().entrySet());
+			arrayElite.addAll(getEliteMainAgents().entrySet());
 		}
 		else
 		{
@@ -537,13 +539,37 @@ public class RoundRobinEliteandSampleEval implements RatePopulation {
 			e.printStackTrace();
 		}
 	}
-	
-	public HashMap<Chromosome, BigDecimal> getEliteIndividuals() {
-		return eliteIndividuals;
+
+	public HashMap<Chromosome, BigDecimal> getEliteMainAgents() {
+		return eliteMainAgents;
 	}
 
-	public void setEliteIndividuals(HashMap<Chromosome, BigDecimal> eliteIndividuals) {
-		this.eliteIndividuals = eliteIndividuals;
+	public HashMap<Chromosome, BigDecimal> getEliteMainExploiters() {
+		return eliteMainExploiters;
 	}
+
+	public HashMap<Chromosome, BigDecimal> getEliteLeagueExploiters() {
+		return eliteLeagueExploiters;
+	}
+
+	public void setEliteMainAgents(HashMap<Chromosome, BigDecimal> eliteMainAgents) {
+		this.eliteMainAgents = eliteMainAgents;
+	}
+
+	public void setEliteMainExploiters(HashMap<Chromosome, BigDecimal> eliteMainExploiters) {
+		this.eliteMainExploiters = eliteMainExploiters;
+	}
+
+	public void setEliteLeagueExploiters(HashMap<Chromosome, BigDecimal> eliteLeagueExploiters) {
+		this.eliteLeagueExploiters = eliteLeagueExploiters;
+	}
+	
+//	public HashMap<Chromosome, BigDecimal> getEliteIndividuals() {
+//		return eliteIndividuals;
+//	}
+//
+//	public void setEliteIndividuals(HashMap<Chromosome, BigDecimal> eliteIndividuals) {
+//		this.eliteIndividuals = eliteIndividuals;
+//	}
 
 }

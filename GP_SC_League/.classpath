@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/MicroRTS2"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-13">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Ingeniero Gil/Desktop/cosas/javax.persistence_2.1.0.v201304241213.jar">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/mrtsWG/lib/jdom.jar">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/MicroRTS2"/>
+	<classpathentry kind="lib" path="C:/Users/Ingeniero Gil/Desktop/cosas/javax.persistence_2.1.0.v201304241213.jar"/>
+	<classpathentry kind="lib" path="/mrtsWG/lib/jdom.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

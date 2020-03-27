@@ -1,0 +1,74 @@
+Log - Generation = 0
+population League Exploiters 
+-- Population --
+Chromosome 41331 
+Value = 0
+Chromosome 12229 
+Value = 0
+Chromosome 75255 
+Value = 0
+Chromosome 34023 
+Value = 0
+Chromosome 50815 
+Value = 0
+Chromosome 56161 
+Value = 0
+-- PopulatioLogLogLog - Generation = 1
+population League Exploiters 
+-- Population --
+Chromosome 70533 
+Value = 0
+Chromosome 35238 
+Value = 0
+Chromosome 53337 
+Value = 0
+Chromosome 16285 
+Value = 0
+Chromosome 78239 
+Value = 0
+Chromosome 73857 
+Value = 0
+-- PoLog - GLog - Log - Generation = 2
+population League Exploiters 
+-- Population --
+Chromosome 35731 
+Value = 0
+Chromosome 10948 
+Value = 0
+Chromosome 78456 
+Value = 0
+Chromosome 43723 
+Value = 0
+Chromosome 56892 
+Value = 0
+Chromosome 20366 
+Value = 0Log - GenerLog - GenLog - Generation = 3
+population League Exploiters 
+-- Population --
+Chromosome 44967 
+Value = 0
+Chromosome 67736 
+Value = 0
+Chromosome 69901 
+Value = 0
+Chromosome 66780 
+Value = 0
+Chromosome 57261 
+Value = 0
+Chromosome 14943 
+ValLog - GeneratiLog - GeneraLog - Generation = 4
+population League Exploiters 
+-- Population --
+Chromosome 73958 
+Value = 0
+Chromosome 55016 
+Value = 0
+Chromosome 39545 
+Value = 0
+Chromosome 5566 
+Value = 0
+Chromosome 51550 
+Value = 0
+Chromosome 28561 
+Value = 0
+-- Population --

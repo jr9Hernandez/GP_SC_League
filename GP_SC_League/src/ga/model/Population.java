@@ -34,7 +34,7 @@ public class Population {
 	private Map<Integer,List<String>> usedCommandsperGeneration;
 	private HashMap<BigDecimal, String> scriptsAlternativeTable;
 	private String pathTableScripts;
-	
+	private String idTypePopulation;
 	
 	
 	
@@ -366,13 +366,13 @@ public class Population {
 	        			{
 	        				if(scrTable.getScriptTable().containsKey(newGrammar))
 	        				{
-	        					System.out.println("before replace Rules "+originalcompleteGrammars+" "+i);
-	        					System.out.println("After replace Rules "+newGrammar+" "+i);
+//	        					System.out.println("before replace Rules "+originalcompleteGrammars+" "+i);
+//	        					System.out.println("After replace Rules "+newGrammar+" "+i);
 	        					newCh.getGenes().set(i, scrTable.getScriptTable().get(newGrammar).intValue());
 	        				}
 	        				else
 	        				{   
-	        					System.out.println("before replace Rules "+originalcompleteGrammars+" "+i);
+//	        					System.out.println("before replace Rules "+originalcompleteGrammars+" "+i);
 	               					
 	        					int newId=scrTable.getScriptTable().size();
 	        					scrTable.getScriptTable().put(newGrammar, BigDecimal.valueOf(newId));
@@ -381,7 +381,7 @@ public class Population {
 	        					addLineFile(newId+" "+newGrammar);
 	        					newCh.getGenes().set(i, newId);
 	        					
-	        					System.out.println("After replace Rules "+newGrammar+" "+newId);
+//	        					System.out.println("After replace Rules "+newGrammar+" "+newId);
 	        				}
 	        			}
 	        		}
@@ -953,6 +953,16 @@ public class Population {
 		}
 		}
 		return grammar;
+	}
+
+
+	public String getIdTypePopulation() {
+		return idTypePopulation;
+	}
+
+
+	public void setIdTypePopulation(String idTypePopulation) {
+		this.idTypePopulation = idTypePopulation;
 	}
 	
 	

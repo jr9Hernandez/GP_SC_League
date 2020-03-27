@@ -518,8 +518,8 @@ public class Reproduction {
 			Collections.shuffle(parents);
 			Chromosome parent1=parents.get(0).getKey();
 			Chromosome parent2=parents.get(1).getKey();
-			System.out.println("parent1 "+parent1.getGenes());
-			System.out.println("parent2 "+parent2.getGenes());
+//			System.out.println("parent1 "+parent1.getGenes());
+//			System.out.println("parent2 "+parent2.getGenes());
 			
 			String [] parentGenotype1=recoverParentStringParts(parent1.getGenes().get(0));
 			String [] parentGenotype2=recoverParentStringParts(parent2.getGenes().get(0));
@@ -567,8 +567,8 @@ public class Reproduction {
 			ArrayList<String> p2sub1= new ArrayList<>();
 			ArrayList<String> p2sub2= new ArrayList<>();
 
-			System.out.println("breakParent1 "+breakParent1);
-			System.out.println("breakParent2 "+breakParent2);
+//			System.out.println("breakParent1 "+breakParent1);
+//			System.out.println("breakParent2 "+breakParent2);
 			
 			for(int i=0;i<breakParent1;i++)
 			{
@@ -588,17 +588,17 @@ public class Reproduction {
 				p2sub2.add(parentGenotype2[i]);
 			}	
 			
-			System.out.println("p1sub1");
-			p1sub1.forEach(System.out::println);
-			
-			System.out.println("p1sub2");
-			p1sub2.forEach(System.out::println);
-			
-			System.out.println("p2sub1");
-			p2sub1.forEach(System.out::println);
-			
-			System.out.println("p2sub2");
-			p2sub2.forEach(System.out::println);
+//			System.out.println("p1sub1");
+//			p1sub1.forEach(System.out::println);
+//			
+//			System.out.println("p1sub2");
+//			p1sub2.forEach(System.out::println);
+//			
+//			System.out.println("p2sub1");
+//			p2sub1.forEach(System.out::println);
+//			
+//			System.out.println("p2sub2");
+//			p2sub2.forEach(System.out::println);
 
 			childGenotype1.addAll(p1sub1);
 			childGenotype1.addAll(p2sub2);
@@ -703,8 +703,8 @@ public class Reproduction {
 				newChromosomes.put(tChom, BigDecimal.ZERO);
 			}
 			
-			System.out.println("child1 "+child1.getGenes());
-			System.out.println("child2 "+child2.getGenes());
+//			System.out.println("child1 "+child1.getGenes());
+//			System.out.println("child2 "+child2.getGenes());
 
 			//here is added the child!
 			if(child1.getGenes().size()!=0)

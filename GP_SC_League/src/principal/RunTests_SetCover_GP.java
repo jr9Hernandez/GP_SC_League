@@ -36,7 +36,9 @@ public class RunTests_SetCover_GP {
 	
 	private final static String pathTableScriptsInit = System.getProperty("user.dir").concat("/TableInitialPortfolio/");
 	//private static final String pathTableScriptsInit = "TableInitialPortfolio/";
-	private static final String pathTable = System.getProperty("user.dir").concat("/Table/");
+	private static final String pathTableMainAgents = System.getProperty("user.dir").concat("/TableMainAgents/");
+	private static final String pathTableMainExploiters = System.getProperty("user.dir").concat("/TableMainExploiters/");
+	private static final String pathTableLeagueExploiters = System.getProperty("user.dir").concat("/TableLeagueExploiters/");
 	private final static String pathLogsBestPortfolios = System.getProperty("user.dir").concat("/TrackingPortfolios/TrackingPortfolios.txt");
 
 
@@ -69,8 +71,28 @@ public class RunTests_SetCover_GP {
 		List<Integer> setCover=scCalculation.getSetCover();
 		String scriptsSetCover=setCover.toString();
 		
-		if(Files.exists(Paths.get(pathTable+"ScriptsTable.txt"))) { 
-			Path source = Paths.get(pathTable+"ScriptsTable.txt");
+		if(Files.exists(Paths.get(pathTableMainAgents+"ScriptsTable.txt"))) { 
+			Path source = Paths.get(pathTableMainAgents+"ScriptsTable.txt");
+			try {
+				Files.move(source, source.resolveSibling("ScriptsTable"+i+".txt"));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if(Files.exists(Paths.get(pathTableMainExploiters+"ScriptsTable.txt"))) { 
+			Path source = Paths.get(pathTableMainExploiters+"ScriptsTable.txt");
+			try {
+				Files.move(source, source.resolveSibling("ScriptsTable"+i+".txt"));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if(Files.exists(Paths.get(pathTableLeagueExploiters+"ScriptsTable.txt"))) { 
+			Path source = Paths.get(pathTableLeagueExploiters+"ScriptsTable.txt");
 			try {
 				Files.move(source, source.resolveSibling("ScriptsTable"+i+".txt"));
 			} catch (IOException e) {
@@ -92,28 +114,31 @@ public class RunTests_SetCover_GP {
 		//fEval = new SetCoverEval();
 		
 		//rodamos o GA
-		Population popFinal = ga.run(fEval,scriptsSetCover,sc.booleansUsed);
+		ArrayList<Population> popFinal = ga.run(fEval,scriptsSetCover,sc.booleansUsed);
 		
 		//popFinal.printWithValue();
 		
 		//Here we chose the best individual
-		HashMap<Chromosome, BigDecimal> elite=(HashMap<Chromosome, BigDecimal>)PreSelection.sortByValueBest(popFinal.getChromosomes());
-		for (Chromosome ch : elite.keySet()) {
-			
-			ArrayList<Integer> Genes=(ArrayList<Integer>) ch.getGenes().clone();
-			curriculumportfolio=Genes.toString();
-			
-		}		
-				
-		//Here we play with a search-based algorithm and save the path
-		try {
-			RunSampling sampling=new RunSampling(i,pathTable,curriculumportfolio);
-		} catch (IOException er) {
-			// TODO Auto-generated catch block
-			er.printStackTrace();
-		}
 		
-		curriculumportfolio=ga.recoverScriptGenotype(curriculumportfolio).trim();
+		
+//      uncooment from here for enabling loops of traces
+//		HashMap<Chromosome, BigDecimal> elite=(HashMap<Chromosome, BigDecimal>)PreSelection.sortByValueBest(popFinal.getChromosomes());
+//		for (Chromosome ch : elite.keySet()) {
+//			
+//			ArrayList<Integer> Genes=(ArrayList<Integer>) ch.getGenes().clone();
+//			curriculumportfolio=Genes.toString();
+//			
+//		}		
+//				
+//		//Here we play with a search-based algorithm and save the path
+//		try {
+//			RunSampling sampling=new RunSampling(i,pathTable,curriculumportfolio);
+//		} catch (IOException er) {
+//			// TODO Auto-generated catch block
+//			er.printStackTrace();
+//		}
+//		
+//		curriculumportfolio=ga.recoverScriptGenotype(curriculumportfolio).trim();
 		
 		
 		}
