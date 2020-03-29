@@ -45,6 +45,10 @@ public class RunGA {
 	private HashMap<Chromosome, BigDecimal> eliteMainAgents=new HashMap<Chromosome, BigDecimal>();
 	private HashMap<Chromosome, BigDecimal> eliteMainExploiters=new HashMap<Chromosome, BigDecimal>();
 	private HashMap<Chromosome, BigDecimal> eliteLeagueExploiters=new HashMap<Chromosome, BigDecimal>();
+	
+	private ArrayList<HashMap<Chromosome, BigDecimal>> historicEliteMainAgents=new ArrayList<HashMap<Chromosome, BigDecimal>>();
+	private ArrayList<HashMap<Chromosome, BigDecimal>> historicEliteMainExploiters=new ArrayList<HashMap<Chromosome, BigDecimal>>();
+	private ArrayList<HashMap<Chromosome, BigDecimal>> historicEliteLeagueExploiters=new ArrayList<HashMap<Chromosome, BigDecimal>>();
 
 	private final String pathTableMainAgents = System.getProperty("user.dir").concat("/TableMainAgents/");
 	private final String pathTableMainExploiters = System.getProperty("user.dir").concat("/TableMainExploiters/");
@@ -215,80 +219,59 @@ public class RunGA {
 
 		resetControls();
 		// Fase 3 = critério de parada
+		int counterIterationsBeforeChangeGeneration=0;
+		int counterGenerationsMainAgents=0;
+		int counterGenerationsMainExploiters=0;
+		int counterGenerationsLeagueExploiters=0;
+		String currentPopulation="MainAgents";
 		while (continueProcess()) {
 
 			// Fase 4 = Seleção (Aplicar Cruzamento e Mutação)
 			Selection selecaoMainAgents = new Selection();
 			Selection selecaoMainExploiters = new Selection();
 			Selection selecaoLeagueExploiters = new Selection();
-			
-			populationMainAgents = selecaoMainAgents.applySelection(populationMainAgents, scrTableMainAgents, pathTableMainAgents);
-			populationMainExploiters = selecaoMainExploiters.applySelection(populationMainExploiters, scrTableMainExploiters, pathTableMainExploiters);
-			populationLeagueExploiters = selecaoLeagueExploiters.applySelection(populationLeagueExploiters, scrTableLeagueExploiters, pathTableLeagueExploiters);
-			eliteMainAgents=selecaoMainAgents.eliteIndividuals;
-			eliteMainExploiters=selecaoMainExploiters.eliteIndividuals;
-			eliteLeagueExploiters=selecaoLeagueExploiters.eliteIndividuals;
-			// Repete-se Fase 2 = Avaliação da população
-//			evalFunction.setEliteMainAgents(eliteMainAgents);
-//			evalFunction.setEliteMainExploiters(eliteMainExploiters);
-//			evalFunction.setEliteLeagueExploiters(eliteLeagueExploiters);
-			
-			//Get all the used commands
-			if(ConfigurationsGA.removeRules==true)
-			{
-				populationMainAgents.fillAllCommands(pathTableMainAgents);
-				populationMainExploiters.fillAllCommands(pathTableMainExploiters);
-				populationLeagueExploiters.fillAllCommands(pathTableLeagueExploiters);
-			}
-			
-			//Remove the unused commands
-			if(ConfigurationsGA.removeRules==true)
-			{
-				populationMainAgents.chooseusedCommands(pathUsedCommandsMainAgents);
-				populationMainExploiters.chooseusedCommands(pathTableMainExploiters);
-				populationLeagueExploiters.chooseusedCommands(pathTableLeagueExploiters);
-			}
-//		    Iterator it = population.getUsedCommandsperGeneration().entrySet().iterator();
-//		    while (it.hasNext()) {
-//		        Map.Entry pair = (Map.Entry)it.next();
-//		        int id=(Integer)pair.getKey();
-//		        List<String> scripts= (List<String>) pair.getValue();
-//		        System.out.println("key "+id+" "+scripts);
-//		        //it.remove(); // avoids a ConcurrentModificationException
-//		    }
-			//Remove used commands from all commands
-			if(ConfigurationsGA.removeRules==true)
-			{
-				populationMainAgents.removeCommands(scrTableMainAgents);
-				populationMainExploiters.removeCommands(scrTableMainExploiters);
-				populationLeagueExploiters.removeCommands(scrTableLeagueExploiters);
-			}
 
-			// atualiza a geração
-			updateGeneration();
-
-			System.out.println("Log - Generation = " + this.generations);
-			fMainAgents.println("Log - Generation = " + this.generations);
-			fMainAgents.println("population Main Agents ");
-			populationMainAgents.printWithValue(fMainAgents);
-			fMainAgents.flush();
+			if(currentPopulation=="MainAgents")
+			{
+				applyIterationbyPopulation(currentPopulation,populationMainAgents, scrTableMainAgents, pathTableMainAgents, selecaoMainAgents, eliteMainAgents, pathUsedCommandsMainAgents,fMainAgents,counterGenerationsMainAgents);
+				counterGenerationsMainAgents++;
+			}
 			
-			System.out.println("Log - Generation = " + this.generations);
-			fMainExploiters.println("Log - Generation = " + this.generations);
-			fMainExploiters.println("population Main Exploiters ");
-			populationMainExploiters.printWithValue(fMainExploiters);
-			fMainExploiters.flush();
+			else if(currentPopulation=="MainExploiters")
+			{
+				applyIterationbyPopulation(currentPopulation,populationMainExploiters, scrTableMainExploiters, pathTableMainExploiters, selecaoMainExploiters, eliteMainExploiters, pathUsedCommandsMainExploiters,fMainExploiters,counterGenerationsMainExploiters);
+				counterGenerationsMainExploiters++;
+			}
 			
-			System.out.println("Log - Generation = " + this.generations);
-			fLeagueExploiters.println("Log - Generation = " + this.generations);
-			fLeagueExploiters.println("population League Exploiters ");
-			populationLeagueExploiters.printWithValue(fLeagueExploiters);
-			fLeagueExploiters.flush();
+			else if(currentPopulation=="LeagueExploiters")
+			{
+				applyIterationbyPopulation(currentPopulation,populationLeagueExploiters, scrTableLeagueExploiters, pathTableLeagueExploiters, selecaoLeagueExploiters, eliteLeagueExploiters, pathUsedCommandsLeagueExploiters,fLeagueExploiters, counterGenerationsLeagueExploiters);
+				counterGenerationsLeagueExploiters++;
+			}
 			
 			if(ConfigurationsGA.UCB1==true)
 			{
 				Log_Facade.shrinkRewardTable();
 				System.out.println("call shrink");
+			}
+			
+			counterIterationsBeforeChangeGeneration++;
+			if(counterIterationsBeforeChangeGeneration>ConfigurationsGA.iterationsForLeague)
+			{
+				counterIterationsBeforeChangeGeneration=0;
+				
+				if(currentPopulation=="MainAgents")
+				{
+					currentPopulation="MainExploiters";
+				}
+				else if(currentPopulation=="MainExploiters")
+				{
+					currentPopulation="LeagueExploiters";
+				}
+				else if(currentPopulation=="LeagueExploiters")
+				{
+					currentPopulation="MainAgents";
+				}
 			}
 		}
 		
@@ -306,6 +289,54 @@ public class RunGA {
 		league.add(populationLeagueExploiters);
 
 		return league;
+	}
+
+	private void applyIterationbyPopulation(String currentPopulation, Population populationLeague, ScriptsTable scrTableLeague, String pathTableLeague, Selection selectionLeague, HashMap<Chromosome, BigDecimal> eliteLeague, String pathUsedCommandsLeague, PrintWriter fLeague, int counterGenerationLeague) {
+
+		
+		populationLeague = selectionLeague.applySelection(populationLeague, scrTableLeague, pathTableLeague);
+		
+		eliteLeague=selectionLeague.eliteIndividuals;
+		
+		// Repete-se Fase 2 = Avaliação da população
+//		evalFunction.setEliteMainAgents(eliteMainAgents);
+//		evalFunction.setEliteMainExploiters(eliteMainExploiters);
+//		evalFunction.setEliteLeagueExploiters(eliteLeagueExploiters);
+		
+		//Get all the used commands
+		if(ConfigurationsGA.removeRules==true)
+		{
+			populationLeague.fillAllCommands(pathTableLeague);
+		}
+		
+		//Remove the unused commands
+		if(ConfigurationsGA.removeRules==true)
+		{
+			populationLeague.chooseusedCommands(pathUsedCommandsLeague);
+		}
+//	    Iterator it = population.getUsedCommandsperGeneration().entrySet().iterator();
+//	    while (it.hasNext()) {
+//	        Map.Entry pair = (Map.Entry)it.next();
+//	        int id=(Integer)pair.getKey();
+//	        List<String> scripts= (List<String>) pair.getValue();
+//	        System.out.println("key "+id+" "+scripts);
+//	        //it.remove(); // avoids a ConcurrentModificationException
+//	    }
+		//Remove used commands from all commands
+		if(ConfigurationsGA.removeRules==true)
+		{
+			populationLeague.removeCommands(scrTableLeague);
+		}
+
+		// atualiza a geração
+		if(currentPopulation=="LeagueExploiters")
+			updateGeneration();
+
+		System.out.println("Log - Population "+currentPopulation+" - Generation = " + counterGenerationLeague);
+		fLeague.println("Log - Generation = " + counterGenerationLeague);
+		populationLeague.printWithValue(fLeague);
+		fLeague.flush();
+		
 	}
 
 	private boolean resetPopulation(Population population2) {

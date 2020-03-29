@@ -33,7 +33,7 @@ public final class ConfigurationsGA {
      public static final int MAX_QTD_COMPONENTS=12;
      public static boolean recoverTable=false;
     
-     public final static boolean removeRules=true;
+     public final static boolean removeRules=false;
      public static final boolean evolvingScript=true;
     
      public static final int LOOPS_SELFPLAY = 2;
@@ -43,6 +43,7 @@ public final class ConfigurationsGA {
      public static final boolean setCoverBooleans=true;
      
      public static final boolean portfolioSetCover=true;
+     public static final int iterationsForLeague=5;
 	
 	
 }

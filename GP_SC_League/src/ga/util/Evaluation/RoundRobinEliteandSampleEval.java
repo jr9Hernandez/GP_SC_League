@@ -52,6 +52,10 @@ public class RoundRobinEliteandSampleEval implements RatePopulation {
 	HashMap<Chromosome, BigDecimal> eliteMainAgents;
 	HashMap<Chromosome, BigDecimal> eliteMainExploiters;
 	HashMap<Chromosome, BigDecimal> eliteLeagueExploiters;
+	
+	private ArrayList<HashMap<Chromosome, BigDecimal>> historicEliteMainAgents=new ArrayList<HashMap<Chromosome, BigDecimal>>();
+	private ArrayList<HashMap<Chromosome, BigDecimal>> historicEliteMainExploiters=new ArrayList<HashMap<Chromosome, BigDecimal>>();
+	private ArrayList<HashMap<Chromosome, BigDecimal>> historicEliteLeagueExploiters=new ArrayList<HashMap<Chromosome, BigDecimal>>();
 
 	public RoundRobinEliteandSampleEval() {
 		super();
