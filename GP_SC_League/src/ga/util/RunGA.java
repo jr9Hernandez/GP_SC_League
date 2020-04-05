@@ -46,9 +46,6 @@ public class RunGA {
 	private HashMap<Chromosome, BigDecimal> eliteMainExploiters=new HashMap<Chromosome, BigDecimal>();
 	private HashMap<Chromosome, BigDecimal> eliteLeagueExploiters=new HashMap<Chromosome, BigDecimal>();
 	
-	private ArrayList<HashMap<Chromosome, BigDecimal>> historicEliteMainAgents=new ArrayList<HashMap<Chromosome, BigDecimal>>();
-	private ArrayList<HashMap<Chromosome, BigDecimal>> historicEliteMainExploiters=new ArrayList<HashMap<Chromosome, BigDecimal>>();
-	private ArrayList<HashMap<Chromosome, BigDecimal>> historicEliteLeagueExploiters=new ArrayList<HashMap<Chromosome, BigDecimal>>();
 
 	private final String pathTableMainAgents = System.getProperty("user.dir").concat("/TableMainAgents/");
 	private final String pathTableMainExploiters = System.getProperty("user.dir").concat("/TableMainExploiters/");
@@ -137,13 +134,13 @@ public class RunGA {
 			populationLeagueExploiters.setIdTypePopulation("LeagueExploiters");
 
 			// Fase 2 = avalia a população
-			evalFunction.setEliteMainAgents(eliteMainAgents);
-			evalFunction.setEliteMainExploiters(eliteMainExploiters);
-			evalFunction.setEliteLeagueExploiters(eliteLeagueExploiters);
+			evalFunction.setEliteByPopulation(eliteMainAgents, "MainAgents");
+			evalFunction.setEliteByPopulation(eliteMainExploiters, "MainExploiters");
+			evalFunction.setEliteByPopulation(eliteLeagueExploiters, "LeagueExploiters");
 			
-//			populationMainAgents = evalFunction.evalPopulation(populationMainAgents, this.generations, scrTableMainAgents);	
-//			populationMainExploiters = evalFunction.evalPopulation(populationMainExploiters, this.generations, scrTableMainExploiters);	
-//			populationLeagueExploiters = evalFunction.evalPopulation(populationLeagueExploiters, this.generations, scrTableLeagueExploiters);	
+			populationMainAgents = evalFunction.evalPopulation(populationMainAgents, this.generations, scrTableMainAgents,0);	
+			populationMainExploiters = evalFunction.evalPopulation(populationMainExploiters, this.generations, scrTableMainExploiters,0);	
+			populationLeagueExploiters = evalFunction.evalPopulation(populationLeagueExploiters, this.generations, scrTableLeagueExploiters,0);	
 			
 //			population.printWithValue(f0);
 //			System.out.println("sep");
@@ -217,12 +214,13 @@ public class RunGA {
 //		} while (resetPopulation(populationMainAgents) || resetPopulation(populationMainExploiters) || 
 //				resetPopulation(populationLeagueExploiters));
 
+		updateGeneration();
 		resetControls();
 		// Fase 3 = critério de parada
-		int counterIterationsBeforeChangeGeneration=0;
-		int counterGenerationsMainAgents=0;
-		int counterGenerationsMainExploiters=0;
-		int counterGenerationsLeagueExploiters=0;
+		int counterIterationsBeforeChangeGeneration=1;
+		int counterGenerationsMainAgents=1;
+		int counterGenerationsMainExploiters=1;
+		int counterGenerationsLeagueExploiters=1;
 		String currentPopulation="MainAgents";
 		while (continueProcess()) {
 
@@ -230,22 +228,24 @@ public class RunGA {
 			Selection selecaoMainAgents = new Selection();
 			Selection selecaoMainExploiters = new Selection();
 			Selection selecaoLeagueExploiters = new Selection();
+			
+			
 
 			if(currentPopulation=="MainAgents")
 			{
-				applyIterationbyPopulation(currentPopulation,populationMainAgents, scrTableMainAgents, pathTableMainAgents, selecaoMainAgents, eliteMainAgents, pathUsedCommandsMainAgents,fMainAgents,counterGenerationsMainAgents);
+				populationMainAgents=applyIterationbyPopulation(currentPopulation,populationMainAgents, scrTableMainAgents, pathTableMainAgents, selecaoMainAgents, eliteMainAgents, pathUsedCommandsMainAgents,fMainAgents,counterGenerationsMainAgents, evalFunction);
 				counterGenerationsMainAgents++;
 			}
 			
 			else if(currentPopulation=="MainExploiters")
 			{
-				applyIterationbyPopulation(currentPopulation,populationMainExploiters, scrTableMainExploiters, pathTableMainExploiters, selecaoMainExploiters, eliteMainExploiters, pathUsedCommandsMainExploiters,fMainExploiters,counterGenerationsMainExploiters);
+				populationMainExploiters=applyIterationbyPopulation(currentPopulation,populationMainExploiters, scrTableMainExploiters, pathTableMainExploiters, selecaoMainExploiters, eliteMainExploiters, pathUsedCommandsMainExploiters,fMainExploiters,counterGenerationsMainExploiters, evalFunction);
 				counterGenerationsMainExploiters++;
 			}
 			
 			else if(currentPopulation=="LeagueExploiters")
 			{
-				applyIterationbyPopulation(currentPopulation,populationLeagueExploiters, scrTableLeagueExploiters, pathTableLeagueExploiters, selecaoLeagueExploiters, eliteLeagueExploiters, pathUsedCommandsLeagueExploiters,fLeagueExploiters, counterGenerationsLeagueExploiters);
+				populationLeagueExploiters=applyIterationbyPopulation(currentPopulation,populationLeagueExploiters, scrTableLeagueExploiters, pathTableLeagueExploiters, selecaoLeagueExploiters, eliteLeagueExploiters, pathUsedCommandsLeagueExploiters,fLeagueExploiters, counterGenerationsLeagueExploiters, evalFunction);
 				counterGenerationsLeagueExploiters++;
 			}
 			
@@ -258,7 +258,7 @@ public class RunGA {
 			counterIterationsBeforeChangeGeneration++;
 			if(counterIterationsBeforeChangeGeneration>ConfigurationsGA.iterationsForLeague)
 			{
-				counterIterationsBeforeChangeGeneration=0;
+				counterIterationsBeforeChangeGeneration=1;
 				
 				if(currentPopulation=="MainAgents")
 				{
@@ -274,6 +274,7 @@ public class RunGA {
 				}
 			}
 		}
+
 		
 		fMainAgents.close();
 		fMainExploiters.close();
@@ -287,21 +288,21 @@ public class RunGA {
 		league.add(populationMainAgents);
 		league.add(populationMainExploiters);
 		league.add(populationLeagueExploiters);
+		
+
 
 		return league;
 	}
 
-	private void applyIterationbyPopulation(String currentPopulation, Population populationLeague, ScriptsTable scrTableLeague, String pathTableLeague, Selection selectionLeague, HashMap<Chromosome, BigDecimal> eliteLeague, String pathUsedCommandsLeague, PrintWriter fLeague, int counterGenerationLeague) {
-
+	private Population applyIterationbyPopulation(String currentPopulation, Population populationLeague, ScriptsTable scrTableLeague, String pathTableLeague, Selection selectionLeague, HashMap<Chromosome, BigDecimal> eliteLeague, String pathUsedCommandsLeague, PrintWriter fLeague, int counterGenerationLeague, RoundRobinEliteandSampleEval evalFunction) {
 		
 		populationLeague = selectionLeague.applySelection(populationLeague, scrTableLeague, pathTableLeague);
 		
 		eliteLeague=selectionLeague.eliteIndividuals;
 		
 		// Repete-se Fase 2 = Avaliação da população
-//		evalFunction.setEliteMainAgents(eliteMainAgents);
-//		evalFunction.setEliteMainExploiters(eliteMainExploiters);
-//		evalFunction.setEliteLeagueExploiters(eliteLeagueExploiters);
+		evalFunction.setEliteByPopulation(eliteLeague, currentPopulation);
+		populationLeague= evalFunction.evalPopulation(populationLeague, this.generations, scrTableLeague,counterGenerationLeague);
 		
 		//Get all the used commands
 		if(ConfigurationsGA.removeRules==true)
@@ -336,6 +337,8 @@ public class RunGA {
 		fLeague.println("Log - Generation = " + counterGenerationLeague);
 		populationLeague.printWithValue(fLeague);
 		fLeague.flush();
+		
+		return populationLeague;
 		
 	}
 

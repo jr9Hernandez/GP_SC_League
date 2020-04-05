@@ -85,6 +85,7 @@ public class Selection {
 		//printMap(chromosomesNewPopulation);
 
 		newPopulation=rp.RemoveCopies(newPopulation);
+		newPopulation.setIdTypePopulation(populacaoInicial.getIdTypePopulation());
 		return newPopulation;
 	}
 

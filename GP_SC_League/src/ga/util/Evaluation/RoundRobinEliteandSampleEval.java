@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
@@ -20,6 +21,7 @@ import ga.ScriptTableGenerator.ScriptsTable;
 import ga.config.ConfigurationsGA;
 import ga.model.Chromosome;
 import ga.model.Population;
+import ga.util.OpponentInLeague;
 import ga.util.PreSelection;
 import model.EvalResult;
 import util.LeitorLog;
@@ -48,14 +50,17 @@ public class RoundRobinEliteandSampleEval implements RatePopulation {
 	ArrayList<String> SOA_Folders = new ArrayList<>();
 	ArrayList<String> SOA_arqs = new ArrayList<>();
 
-	ArrayList<Chromosome> ChromosomeSample = new ArrayList<>();
-	HashMap<Chromosome, BigDecimal> eliteMainAgents;
-	HashMap<Chromosome, BigDecimal> eliteMainExploiters;
-	HashMap<Chromosome, BigDecimal> eliteLeagueExploiters;
+	ArrayList<OpponentInLeague> arrayOpponents=new ArrayList<OpponentInLeague>();
+	HashMap<Chromosome, BigDecimal> eliteIndividualsMainAgents;
+	HashMap<Chromosome, BigDecimal> eliteIndividualsMainExploiters;
+	HashMap<Chromosome, BigDecimal> eliteIndividualsLeagueExploiters;
 	
 	private ArrayList<HashMap<Chromosome, BigDecimal>> historicEliteMainAgents=new ArrayList<HashMap<Chromosome, BigDecimal>>();
 	private ArrayList<HashMap<Chromosome, BigDecimal>> historicEliteMainExploiters=new ArrayList<HashMap<Chromosome, BigDecimal>>();
 	private ArrayList<HashMap<Chromosome, BigDecimal>> historicEliteLeagueExploiters=new ArrayList<HashMap<Chromosome, BigDecimal>>();
+	
+	String currentPopulation;
+	int currentGenerationByPopulation;
 
 	public RoundRobinEliteandSampleEval() {
 		super();
@@ -71,29 +76,72 @@ public class RoundRobinEliteandSampleEval implements RatePopulation {
 		// executa os confrontos
 		runBattles(population);
 
-		// SÃ³ permite continuar a execuÃ§Ã£o apÃ³s terminar os JOBS.
-		controllExecute();
+//		// SÃ³ permite continuar a execuÃ§Ã£o apÃ³s terminar os JOBS.
+//		controllExecute();
+//
+//		// remove qualquer aquivo que nÃ£o possua um vencedor
+//		removeLogsEmpty();
+//
+//		// ler resultados
+//		ArrayList<EvalResult> resultados = lerResultados();
+//		//check if all files were read
+//				while(resultados.size() < this.battleFiles.size()) {
+//					//record missing files
+//					generatedMissingFiles(resultados);
+//					//continue with the iterative controll
+//					controllExecute();
+//					ArrayList<EvalResult> missResultados = lerResultados();
+//					resultados.addAll(missResultados);
+//				}
+//				
+//		System.out.println("Number of matchs necessary "+ this.battleFiles.size());
+//		System.out.println("Total of matchs read "+resultados.size());
+//		
+//		// atualizar valores das populacoes
+//		updatePopulationValue(resultados, population);
 
-		// remove qualquer aquivo que nÃ£o possua um vencedor
-		removeLogsEmpty();
+		return population;
+	}
+	
+	public Population evalPopulation(Population population, int generation, ScriptsTable scriptsTable, int generationByPopulation) {
+		this.currentGenerationByPopulation=generationByPopulation;
+		this.atualGeneration = generation;
+		SOA_Folders.clear();
+		// limpa os valores existentes na population
+		population.clearValueChromosomes();
 
-		// ler resultados
-		ArrayList<EvalResult> resultados = lerResultados();
-		//check if all files were read
-				while(resultados.size() < this.battleFiles.size()) {
-					//record missing files
-					generatedMissingFiles(resultados);
-					//continue with the iterative controll
-					controllExecute();
-					ArrayList<EvalResult> missResultados = lerResultados();
-					resultados.addAll(missResultados);
-				}
-				
-		System.out.println("Number of matchs necessary "+ this.battleFiles.size());
-		System.out.println("Total of matchs read "+resultados.size());
+		// executa os confrontos
+		runBattles(population);
+
+//		// SÃ³ permite continuar a execuÃ§Ã£o apÃ³s terminar os JOBS.
+//		controllExecute();
+//
+//		// remove qualquer aquivo que nÃ£o possua um vencedor
+//		removeLogsEmpty();
+//
+//		// ler resultados
+//		ArrayList<EvalResult> resultados = lerResultados();
+//		//check if all files were read
+//				while(resultados.size() < this.battleFiles.size()) {
+//					//record missing files
+//					generatedMissingFiles(resultados);
+//					//continue with the iterative controll
+//					controllExecute();
+//					ArrayList<EvalResult> missResultados = lerResultados();
+//					resultados.addAll(missResultados);
+//				}
+//				
+//		System.out.println("Number of matchs necessary "+ this.battleFiles.size());
+//		System.out.println("Total of matchs read "+resultados.size());
+//		
+//		// atualizar valores das populacoes
+//		updatePopulationValue(resultados, population);
 		
-		// atualizar valores das populacoes
-		updatePopulationValue(resultados, population);
+		//this is temporary for experiments
+		Random r=new Random();
+		for (Chromosome ch : population.getChromosomes().keySet()) {
+			population.getChromosomes().put(ch,BigDecimal.valueOf(r.nextInt(15)) );
+        }
 
 		return population;
 	}
@@ -305,131 +353,275 @@ public class RoundRobinEliteandSampleEval implements RatePopulation {
 		// montar a lista de batalhas que irÃ£o ocorrer
 		
 		
-		defineChromosomeSample(population);
-		defineRandomSet(population);
+		defineOpponents(population);
+		//defineRandomSet(population);
 
 		for (int i = 0; i < TOTAL_PARTIDAS_ROUND; i++) {
 
 			for (Chromosome cIA1 : population.getChromosomes().keySet()) {
 				
 
-				for (Chromosome cIA2 : this.ChromosomeSample) {
-
-					//if (!cIA1.equals(cIA2)) {
-						// System.out.println("IA1 = "+ convertTuple(cIA1)+ "
-						// IA2 = "+ convertTuple(cIA2));
-
-						// first position
-						String strConfig = pathCentral + "/" + convertBasicTuple(cIA1) + "#(" + convertBasicTuple(cIA2)
-								+ ")#" + i + "#" + atualGeneration + ".txt";
-						File arqConfig = new File(strConfig);
-						if (!arqConfig.exists()) {
-							try {
-								arqConfig.createNewFile();
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-						// escreve a configuraÃ§Ã£o de teste
-						try {
-							FileWriter arq = new FileWriter(arqConfig, false);
-							PrintWriter gravarArq = new PrintWriter(arq);
-
-							String infFile = convertBasicTuple(cIA1) + "#(" + convertBasicTuple(cIA2) + ")#" + i + "#"
-									+ atualGeneration;
-							gravarArq.println(infFile);
-							this.battleFiles.put(strConfig, infFile);
-
-							gravarArq.flush();
-							gravarArq.close();
-							arq.close();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-
-						// second position
-						strConfig = pathCentral + "/(" + convertBasicTuple(cIA2) + ")#" + convertBasicTuple(cIA1) + "#"
-								+ i + "#" + atualGeneration + ".txt";
-						arqConfig = new File(strConfig);
-						if (!arqConfig.exists()) {
-							try {
-								arqConfig.createNewFile();
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						}
-						try {
-							FileWriter arq = new FileWriter(arqConfig, false);
-							PrintWriter gravarArq = new PrintWriter(arq);
-
-							String infFile = "(" + convertBasicTuple(cIA2) + ")#" + convertBasicTuple(cIA1) + "#" + i
-									+ "#" + atualGeneration;
-							gravarArq.println(infFile);
-							this.battleFiles.put(strConfig, infFile);
-
-							gravarArq.flush();
-							gravarArq.close();
-							arq.close();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-
-					//}
-
-				}
+//				for (Chromosome cIA2 : this.ChromosomeSample) {
+//
+//					//if (!cIA1.equals(cIA2)) {
+//						// System.out.println("IA1 = "+ convertTuple(cIA1)+ "
+//						// IA2 = "+ convertTuple(cIA2));
+//
+//						// first position
+//						String strConfig = pathCentral + "/" + convertBasicTuple(cIA1) + "#(" + convertBasicTuple(cIA2)
+//								+ ")#" + i + "#" + atualGeneration + ".txt";
+//						File arqConfig = new File(strConfig);
+//						if (!arqConfig.exists()) {
+//							try {
+//								arqConfig.createNewFile();
+//							} catch (IOException e) {
+//								// TODO Auto-generated catch block
+//								e.printStackTrace();
+//							}
+//						}
+//						// escreve a configuraÃ§Ã£o de teste
+//						try {
+//							FileWriter arq = new FileWriter(arqConfig, false);
+//							PrintWriter gravarArq = new PrintWriter(arq);
+//
+//							String infFile = convertBasicTuple(cIA1) + "#(" + convertBasicTuple(cIA2) + ")#" + i + "#"
+//									+ atualGeneration;
+//							gravarArq.println(infFile);
+//							this.battleFiles.put(strConfig, infFile);
+//
+//							gravarArq.flush();
+//							gravarArq.close();
+//							arq.close();
+//						} catch (IOException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//
+//						// second position
+//						strConfig = pathCentral + "/(" + convertBasicTuple(cIA2) + ")#" + convertBasicTuple(cIA1) + "#"
+//								+ i + "#" + atualGeneration + ".txt";
+//						arqConfig = new File(strConfig);
+//						if (!arqConfig.exists()) {
+//							try {
+//								arqConfig.createNewFile();
+//							} catch (IOException e) {
+//								e.printStackTrace();
+//							}
+//						}
+//						try {
+//							FileWriter arq = new FileWriter(arqConfig, false);
+//							PrintWriter gravarArq = new PrintWriter(arq);
+//
+//							String infFile = "(" + convertBasicTuple(cIA2) + ")#" + convertBasicTuple(cIA1) + "#" + i
+//									+ "#" + atualGeneration;
+//							gravarArq.println(infFile);
+//							this.battleFiles.put(strConfig, infFile);
+//
+//							gravarArq.flush();
+//							gravarArq.close();
+//							arq.close();
+//						} catch (IOException e) {
+//							e.printStackTrace();
+//						}
+//
+//					//}
+//
+//				}
 			}
 		}
 	}
 	
-	private void defineRandomSet(Population population) {
-		
-		
-		int totalPop = population.getChromosomes().size();
-		Random rand = new Random();
-		HashSet<Chromosome> samples = new HashSet<>();
-		ArrayList<Chromosome> temp = new ArrayList<>(population.getChromosomes().keySet());
-		System.out.print("Random set ");
-		while (samples.size() < ConfigurationsGA.QTD_ENEMIES_SAMPLE_RANDOM) {
-			
-			Chromosome cTemp;
-			do {
-				cTemp = temp.get(rand.nextInt(totalPop));
-			}while(ChromosomeSample.contains(cTemp));
-			System.out.print("Random set "+cTemp.getGenes().toString());
-			samples.add(cTemp);
-		}
-		System.out.println("");
-		this.ChromosomeSample.addAll(samples);
+//	private void defineRandomSet(Population population) {
+//		
+//		
+//		int totalPop = population.getChromosomes().size();
+//		Random rand = new Random();
+//		HashSet<Chromosome> samples = new HashSet<>();
+//		ArrayList<Chromosome> temp = new ArrayList<>(population.getChromosomes().keySet());
+//		System.out.print("Random set ");
+//		while (samples.size() < ConfigurationsGA.QTD_ENEMIES_SAMPLE_RANDOM) {
+//			
+//			Chromosome cTemp;
+//			do {
+//				cTemp = temp.get(rand.nextInt(totalPop));
+//			}while(ChromosomeSample.contains(cTemp));
+//			System.out.print("Random set "+cTemp.getGenes().toString());
+//			samples.add(cTemp);
+//		}
+//		System.out.println("");
+//		this.ChromosomeSample.addAll(samples);
+//
+//	}
 
+	private void defineOpponents(Population population) {
+		
+		this.arrayOpponents.clear();
+		
+		PreSelection ps=new PreSelection(population);	
+		HashMap<Chromosome, BigDecimal> eliteRandom=(HashMap<Chromosome, BigDecimal>)ps.sortByValue(population.getChromosomes());
+
+		ArrayList<Entry<Chromosome, BigDecimal>> arrayOpponentsTemp = new ArrayList<>();
+		
+		if(population.getIdTypePopulation().equals("MainAgents"))
+		{
+			System.out.println("Defining opponents for Main Agents "+eliteIndividualsMainAgents.size());
+			if(eliteIndividualsMainAgents.size()>0)
+			{
+				arrayOpponentsTemp.addAll(eliteIndividualsMainAgents.entrySet());
+				for(int i=0; i<(arrayOpponentsTemp.size()/2);i++)
+				{	
+					arrayOpponents.add(new OpponentInLeague(arrayOpponentsTemp.get(i),population.getIdTypePopulation(),currentGenerationByPopulation-1));	
+				}
+				System.out.println("Printing opponents before completing with random ");
+				printOpponents();
+				arrayOpponents=completeWithRandomElementsFromPast(arrayOpponents);
+				System.out.println("Printing opponents after completing with random ");
+				printOpponents();
+			}
+			else
+			{
+				arrayOpponentsTemp.addAll(eliteRandom.entrySet());
+				for(Entry<Chromosome, BigDecimal> element:arrayOpponentsTemp)
+				{
+					arrayOpponents.add(new OpponentInLeague(element,population.getIdTypePopulation(),currentGenerationByPopulation));
+				}
+				printOpponents();
+				
+			}	
+						
+		}
+		else if(population.getIdTypePopulation().equals("MainExploiters"))
+		{
+			System.out.println("Defining opponents for Main Exploiters"+eliteIndividualsMainAgents.size());
+			if(eliteIndividualsMainAgents.size()>0)
+			{
+				arrayOpponentsTemp.addAll(historicEliteMainAgents.get(historicEliteMainAgents.size()-1).entrySet());
+				for(int i=0; i<(arrayOpponentsTemp.size());i++)
+				{
+					//arrayOpponents.add(arrayOpponentsTemp.get(i));	
+					arrayOpponents.add(new OpponentInLeague(arrayOpponentsTemp.get(i),"MainAgents",historicEliteMainAgents.size()-1));	
+				}
+				printOpponents();
+		
+			}
+			else
+			{
+				arrayOpponentsTemp.addAll(eliteRandom.entrySet());
+				for(Entry<Chromosome, BigDecimal> element:arrayOpponentsTemp)
+				{
+					arrayOpponents.add(new OpponentInLeague(element,population.getIdTypePopulation(),currentGenerationByPopulation));
+				}
+				printOpponents();
+				
+			}	
+			
+		}
+		else if(population.getIdTypePopulation().equals("LeagueExploiters"))
+		{
+			System.out.println("Defining opponents for League Exploiters");
+			if(eliteIndividualsLeagueExploiters.size()>0)
+			{
+				arrayOpponents=completeWithRandomElementsFromPast(arrayOpponents);
+			}
+			else
+			{
+				arrayOpponentsTemp.addAll(eliteRandom.entrySet());
+				for(Entry<Chromosome, BigDecimal> element:arrayOpponentsTemp)
+				{
+					arrayOpponents.add(new OpponentInLeague(element,population.getIdTypePopulation(),currentGenerationByPopulation));
+				}
+				printOpponents();
+			}
+		}
+		
+//		System.out.println("Current opponents");
+//		HashSet<Chromosome> eliteH = new HashSet<>();
+//		for(int i=0;i<arrayOpponents.size();i++)
+//		{
+//			eliteH.add(arrayOpponents.get(i).getKey());
+//			System.out.print(arrayOpponents.get(i).getKey().getGenes().toString()+" ");
+//		}
+//		System.out.println("");
+//		this.ChromosomeSample.addAll(eliteH);
+		
+		System.out.println("Printing the oponents Final");
+		printOpponents();
 	}
 
-	private void defineChromosomeSample(Population population) {
+	private ArrayList<OpponentInLeague> completeWithRandomElementsFromPast(ArrayList<OpponentInLeague> arrayOpponents) {
+				
+		Random r=new Random();
 		
-		this.ChromosomeSample.clear();
-		PreSelection ps=new PreSelection(population);	
-		HashMap<Chromosome, BigDecimal> elite=(HashMap<Chromosome, BigDecimal>)ps.sortByValue(population.getChromosomes());
-		ArrayList<Entry<Chromosome, BigDecimal>> arrayElite = new ArrayList<>();
+		while(arrayOpponents.size()<ConfigurationsGA.SIZE_ELITE)
+		{
+			int typePopulationChosen =r.nextInt(3);
+			HashMap<Chromosome, BigDecimal> eliteFromPast=new HashMap<Chromosome, BigDecimal>();
+			ArrayList<Entry<Chromosome, BigDecimal>> eliteChromosomesFromPast=new ArrayList<Entry<Chromosome, BigDecimal>>();
+			//population Main Agents 
+			if(typePopulationChosen==0)
+			{
+				if(historicEliteMainAgents.size()>0)
+				{
+					int generationFromPast=r.nextInt(historicEliteMainAgents.size());
+					eliteFromPast=historicEliteMainAgents.get(generationFromPast);
+					eliteChromosomesFromPast.addAll(eliteFromPast.entrySet());
+					OpponentInLeague opponentToAdd=new OpponentInLeague(eliteChromosomesFromPast.get(r.nextInt(eliteChromosomesFromPast.size())), "MainAgents",generationFromPast);
+					boolean opponentExist=false;
+					for(OpponentInLeague opp: arrayOpponents)
+					{
+						if((opp.getEntryChromosome().getKey()==opponentToAdd.getEntryChromosome().getKey()) && (opp.getTypePopulation()==opponentToAdd.getTypePopulation()))
+							opponentExist=true;
+						
+					}
+					if(!opponentExist)
+						arrayOpponents.add(opponentToAdd);
+				}
+			
+			}
 		
-		if(getEliteMainAgents().size()>0)
-		{
-			arrayElite.addAll(getEliteMainAgents().entrySet());
-		}
-		else
-		{
-			arrayElite.addAll(elite.entrySet());
-		}
+			//population Main Exploiters
+			else if(typePopulationChosen==1)
+			{
+				if(historicEliteMainExploiters.size()>0)
+				{
+					int generationFromPast=r.nextInt(historicEliteMainExploiters.size());
+					eliteFromPast=historicEliteMainExploiters.get(generationFromPast);
+					eliteChromosomesFromPast.addAll(eliteFromPast.entrySet());
+					OpponentInLeague opponentToAdd=new OpponentInLeague(eliteChromosomesFromPast.get(r.nextInt(eliteChromosomesFromPast.size())), "MainExploiters",generationFromPast);
+					boolean opponentExist=false;
+					for(OpponentInLeague opp: arrayOpponents)
+					{
+						if((opp.getEntryChromosome().getKey()==opponentToAdd.getEntryChromosome().getKey()) && (opp.getTypePopulation()==opponentToAdd.getTypePopulation()))
+							opponentExist=true;
+						
+					}
+					if(!opponentExist)
+						arrayOpponents.add(opponentToAdd);
+				}
+			}
 		
-		System.out.println("Elite last generation");
-		HashSet<Chromosome> eliteH = new HashSet<>();
-		for(int i=0;i<arrayElite.size();i++)
-		{
-			eliteH.add(arrayElite.get(i).getKey());
-			System.out.print(arrayElite.get(i).getKey().getGenes().toString()+" ");
+			//population League Exploiters
+			else if(typePopulationChosen==2)
+			{
+				if(historicEliteLeagueExploiters.size()>0)
+				{
+					int generationFromPast=r.nextInt(historicEliteLeagueExploiters.size());
+					eliteFromPast=historicEliteLeagueExploiters.get(generationFromPast);
+					eliteChromosomesFromPast.addAll(eliteFromPast.entrySet());
+					OpponentInLeague opponentToAdd=new OpponentInLeague(eliteChromosomesFromPast.get(r.nextInt(eliteChromosomesFromPast.size())), "LeagueExploiters",generationFromPast);
+					boolean opponentExist=false;
+					for(OpponentInLeague opp: arrayOpponents)
+					{
+						if((opp.getEntryChromosome().getKey()==opponentToAdd.getEntryChromosome().getKey()) && (opp.getTypePopulation()==opponentToAdd.getTypePopulation()))
+							opponentExist=true;
+						
+					}
+					if(!opponentExist)
+						arrayOpponents.add(opponentToAdd);
+				}			
+			}
 		}
-		System.out.println("");
-		this.ChromosomeSample.addAll(eliteH);
+		return arrayOpponents;
 	}
 
 	private String convertTuple(Chromosome cromo) {
@@ -543,37 +735,74 @@ public class RoundRobinEliteandSampleEval implements RatePopulation {
 			e.printStackTrace();
 		}
 	}
+	
 
-	public HashMap<Chromosome, BigDecimal> getEliteMainAgents() {
-		return eliteMainAgents;
-	}
 
-	public HashMap<Chromosome, BigDecimal> getEliteMainExploiters() {
-		return eliteMainExploiters;
-	}
+	public void setEliteByPopulation(HashMap<Chromosome, BigDecimal> eliteIndividuals, String currentPopulation) {
+		this.currentPopulation=currentPopulation;
 
-	public HashMap<Chromosome, BigDecimal> getEliteLeagueExploiters() {
-		return eliteLeagueExploiters;
-	}
-
-	public void setEliteMainAgents(HashMap<Chromosome, BigDecimal> eliteMainAgents) {
-		this.eliteMainAgents = eliteMainAgents;
-	}
-
-	public void setEliteMainExploiters(HashMap<Chromosome, BigDecimal> eliteMainExploiters) {
-		this.eliteMainExploiters = eliteMainExploiters;
-	}
-
-	public void setEliteLeagueExploiters(HashMap<Chromosome, BigDecimal> eliteLeagueExploiters) {
-		this.eliteLeagueExploiters = eliteLeagueExploiters;
+		if(currentPopulation.equals("MainAgents"))
+		{
+			eliteIndividualsMainAgents=eliteIndividuals;
+			if(eliteIndividualsMainAgents.size()>0)
+			{
+				historicEliteMainAgents.add(eliteIndividualsMainAgents);
+			}
+		}
+		else if(currentPopulation.equals("MainExploiters"))
+		{
+			eliteIndividualsMainExploiters=eliteIndividuals;
+			if(eliteIndividualsMainExploiters.size()>0)
+			{
+				historicEliteMainExploiters.add(eliteIndividualsMainExploiters);
+			}
+		}
+		else if(currentPopulation.equals("LeagueExploiters"))
+		{
+			eliteIndividualsLeagueExploiters=eliteIndividuals;
+			if(eliteIndividualsLeagueExploiters.size()>0)
+			{
+				historicEliteLeagueExploiters.add(eliteIndividualsLeagueExploiters);
+			}
+		}
+		
+		System.out.println("Historic Main Agents");
+		if(historicEliteMainAgents.size()>0 )
+		{
+			printHistoricElite(historicEliteMainAgents);
+		}
+		
+		System.out.println("Historic Main Exploiters");
+		if(historicEliteMainExploiters.size()>0 )
+		{
+			printHistoricElite(historicEliteMainExploiters);
+		}
+		
+		System.out.println("Historic League Exploiters");
+		if( historicEliteLeagueExploiters.size()>0)
+		{
+			printHistoricElite(historicEliteLeagueExploiters);
+		}
 	}
 	
-//	public HashMap<Chromosome, BigDecimal> getEliteIndividuals() {
-//		return eliteIndividuals;
-//	}
-//
-//	public void setEliteIndividuals(HashMap<Chromosome, BigDecimal> eliteIndividuals) {
-//		this.eliteIndividuals = eliteIndividuals;
-//	}
+	public void printOpponents()
+	{
+		for(OpponentInLeague element:arrayOpponents)
+		{
+			System.out.println("gen "+element.getEntryChromosome().getKey().getGenes().get(0)+" Type "+element.getTypePopulation()+ "GenNumber "+element.getGenerationEliteNumber());
+		}
+	}
+	
+	public void printHistoricElite(ArrayList<HashMap<Chromosome, BigDecimal>> historicElite)
+	{
+		for (Map<Chromosome, BigDecimal> entry : historicElite) {
+			System.out.println("new elite");
+		    for (Chromosome key : entry.keySet()) {
+		    	BigDecimal value = entry.get(key);
+		        System.out.println("key = " + key.getGenes());
+
+		    }
+		}
+	}
 
 }
