@@ -115,7 +115,7 @@ public class RunGA {
 			fMainExploiters = new PrintWriter(new FileWriter(pathLogsMainExploiters+"Tracking.txt"));
 			fLeagueExploiters = new PrintWriter(new FileWriter(pathLogsLeagueExploiters+"Tracking.txt"));
 
-//		do {
+		do {
 			// Fase 1 = gerar a população inicial
 			if(!ConfigurationsGA.curriculum)
 			{
@@ -141,8 +141,11 @@ public class RunGA {
 			populationMainAgents = evalFunction.evalPopulation(populationMainAgents, this.generations, scrTableMainAgents,0);	
 			populationMainExploiters = evalFunction.evalPopulation(populationMainExploiters, this.generations, scrTableMainExploiters,0);	
 			populationLeagueExploiters = evalFunction.evalPopulation(populationLeagueExploiters, this.generations, scrTableLeagueExploiters,0);	
-			
-//			population.printWithValue(f0);
+	
+			System.out.println("printing before removing");
+			populationMainAgents.printWithValue(fMainAgents);
+			populationMainExploiters.printWithValue(fMainExploiters);
+			populationLeagueExploiters.printWithValue(fLeagueExploiters);
 //			System.out.println("sep");
 			
 			//Get all the used commands
@@ -163,8 +166,8 @@ public class RunGA {
 			if(ConfigurationsGA.removeRules==true)
 			{
 				populationMainAgents.chooseusedCommands(pathUsedCommandsMainAgents);
-				populationMainExploiters.chooseusedCommands(pathTableMainExploiters);
-				populationLeagueExploiters.chooseusedCommands(pathTableLeagueExploiters);
+				populationMainExploiters.chooseusedCommands(pathUsedCommandsMainExploiters);
+				populationLeagueExploiters.chooseusedCommands(pathUsedCommandsLeagueExploiters);
 			}
 				
 //		    Iterator it = population.getUsedCommandsperGeneration().entrySet().iterator();
@@ -211,8 +214,8 @@ public class RunGA {
 			fLeagueExploiters.flush();
 
 			
-//		} while (resetPopulation(populationMainAgents) || resetPopulation(populationMainExploiters) || 
-//				resetPopulation(populationLeagueExploiters));
+		} while (resetPopulation(populationMainAgents) || resetPopulation(populationMainExploiters) || 
+				resetPopulation(populationLeagueExploiters));
 
 		updateGeneration();
 		resetControls();
@@ -303,6 +306,9 @@ public class RunGA {
 		// Repete-se Fase 2 = Avaliação da população
 		evalFunction.setEliteByPopulation(eliteLeague, currentPopulation);
 		populationLeague= evalFunction.evalPopulation(populationLeague, this.generations, scrTableLeague,counterGenerationLeague);
+		
+		System.out.println("printing before removing rules");
+		populationLeague.printWithValue(fLeague);
 		
 		//Get all the used commands
 		if(ConfigurationsGA.removeRules==true)

@@ -27,7 +27,7 @@ public class Sketch {
 	int maxComponents;
 	HashSet<String> booleansUsed;
 	HashSet<String> typesUnitsinCommands=new HashSet();
-	private final String pathTrackingSC = System.getProperty("user.dir").concat("/Tracking/SCcommands.txt");
+	private final String pathTrackingSC = System.getProperty("user.dir").concat("/SCcommands.txt");
 	
 	public Sketch()
 	{

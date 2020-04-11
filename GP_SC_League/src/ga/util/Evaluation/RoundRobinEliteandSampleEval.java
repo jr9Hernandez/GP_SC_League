@@ -113,35 +113,35 @@ public class RoundRobinEliteandSampleEval implements RatePopulation {
 		// executa os confrontos
 		runBattles(population);
 
-//		// SÃ³ permite continuar a execuÃ§Ã£o apÃ³s terminar os JOBS.
-//		controllExecute();
-//
-//		// remove qualquer aquivo que nÃ£o possua um vencedor
-//		removeLogsEmpty();
-//
-//		// ler resultados
-//		ArrayList<EvalResult> resultados = lerResultados();
-//		//check if all files were read
-//				while(resultados.size() < this.battleFiles.size()) {
-//					//record missing files
-//					generatedMissingFiles(resultados);
-//					//continue with the iterative controll
-//					controllExecute();
-//					ArrayList<EvalResult> missResultados = lerResultados();
-//					resultados.addAll(missResultados);
-//				}
-//				
-//		System.out.println("Number of matchs necessary "+ this.battleFiles.size());
-//		System.out.println("Total of matchs read "+resultados.size());
-//		
-//		// atualizar valores das populacoes
-//		updatePopulationValue(resultados, population);
+		// SÃ³ permite continuar a execuÃ§Ã£o apÃ³s terminar os JOBS.
+		controllExecute();
+
+		// remove qualquer aquivo que nÃ£o possua um vencedor
+		removeLogsEmpty();
+
+		// ler resultados
+		ArrayList<EvalResult> resultados = lerResultados();
+		//check if all files were read
+				while(resultados.size() < this.battleFiles.size()) {
+					//record missing files
+					generatedMissingFiles(resultados);
+					//continue with the iterative controll
+					controllExecute();
+					ArrayList<EvalResult> missResultados = lerResultados();
+					resultados.addAll(missResultados);
+				}
+				
+		System.out.println("Number of matchs necessary "+ this.battleFiles.size());
+		System.out.println("Total of matchs read "+resultados.size());
+		
+		// atualizar valores das populacoes
+		updatePopulationValue(resultados, population);
 		
 		//this is temporary for experiments
-		Random r=new Random();
-		for (Chromosome ch : population.getChromosomes().keySet()) {
-			population.getChromosomes().put(ch,BigDecimal.valueOf(r.nextInt(15)) );
-        }
+//		Random r=new Random();
+//		for (Chromosome ch : population.getChromosomes().keySet()) {
+//			population.getChromosomes().put(ch,BigDecimal.valueOf(r.nextInt(15)) );
+//        }
 
 		return population;
 	}
@@ -182,9 +182,11 @@ public class RoundRobinEliteandSampleEval implements RatePopulation {
 
     private void updateChromo(Population pop, String IAWinner, BigDecimal value) {
         // buscar na população a IA compatível.
+    	if(pop.getIdTypePopulation().equals("MainAgents"))
+    	{
                 Chromosome chrUpdate = null;
                 for (Chromosome ch : pop.getChromosomes().keySet()) {
-                    if (convertBasicTuple(ch).equals(IAWinner)) {
+                    if (IAWinner.equals("_("+convertBasicTuple(ch)+")_")) {
                         chrUpdate = ch;
                     }
                 }
@@ -198,6 +200,45 @@ public class RoundRobinEliteandSampleEval implements RatePopulation {
                         chrTemp.put(chrUpdate, toUpdate);
                     }
                 }
+    	}
+    	else if(pop.getIdTypePopulation().equals("MainExploiters"))
+    	{
+                Chromosome chrUpdate = null;
+                for (Chromosome ch : pop.getChromosomes().keySet()) {
+                    if (IAWinner.equals("_{"+convertBasicTuple(ch)+"}_")) {
+                        chrUpdate = ch;
+                    }
+                }
+                
+                if (chrUpdate != null) {
+                    // atualizar valores.
+                    BigDecimal toUpdate = pop.getChromosomes().get(chrUpdate);
+                    if (toUpdate != null) {
+                        toUpdate = toUpdate.add(value);
+                        HashMap<Chromosome, BigDecimal> chrTemp = pop.getChromosomes();
+                        chrTemp.put(chrUpdate, toUpdate);
+                    }
+                }
+    	}
+    	else if(pop.getIdTypePopulation().equals("LeagueExploiters"))
+    	{
+                Chromosome chrUpdate = null;
+                for (Chromosome ch : pop.getChromosomes().keySet()) {
+                    if (IAWinner.equals("_["+convertBasicTuple(ch)+"]_")) {
+                        chrUpdate = ch;
+                    }
+                }
+                
+                if (chrUpdate != null) {
+                    // atualizar valores.
+                    BigDecimal toUpdate = pop.getChromosomes().get(chrUpdate);
+                    if (toUpdate != null) {
+                        toUpdate = toUpdate.add(value);
+                        HashMap<Chromosome, BigDecimal> chrTemp = pop.getChromosomes();
+                        chrTemp.put(chrUpdate, toUpdate);
+                    }
+                }
+    	}
 	}
 
 	private ArrayList<EvalResult> removeDraw(ArrayList<EvalResult> results) {
@@ -361,72 +402,155 @@ public class RoundRobinEliteandSampleEval implements RatePopulation {
 			for (Chromosome cIA1 : population.getChromosomes().keySet()) {
 				
 
-//				for (Chromosome cIA2 : this.ChromosomeSample) {
-//
-//					//if (!cIA1.equals(cIA2)) {
-//						// System.out.println("IA1 = "+ convertTuple(cIA1)+ "
-//						// IA2 = "+ convertTuple(cIA2));
-//
-//						// first position
-//						String strConfig = pathCentral + "/" + convertBasicTuple(cIA1) + "#(" + convertBasicTuple(cIA2)
-//								+ ")#" + i + "#" + atualGeneration + ".txt";
-//						File arqConfig = new File(strConfig);
-//						if (!arqConfig.exists()) {
-//							try {
-//								arqConfig.createNewFile();
-//							} catch (IOException e) {
-//								// TODO Auto-generated catch block
-//								e.printStackTrace();
-//							}
-//						}
-//						// escreve a configuraÃ§Ã£o de teste
-//						try {
-//							FileWriter arq = new FileWriter(arqConfig, false);
-//							PrintWriter gravarArq = new PrintWriter(arq);
-//
-//							String infFile = convertBasicTuple(cIA1) + "#(" + convertBasicTuple(cIA2) + ")#" + i + "#"
-//									+ atualGeneration;
-//							gravarArq.println(infFile);
-//							this.battleFiles.put(strConfig, infFile);
-//
-//							gravarArq.flush();
-//							gravarArq.close();
-//							arq.close();
-//						} catch (IOException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
-//
-//						// second position
+				for (OpponentInLeague opponent : this.arrayOpponents) {
+
+					Chromosome cIA2=opponent.getEntryChromosome().getKey();
+					//if (!cIA1.equals(cIA2)) {
+						// System.out.println("IA1 = "+ convertTuple(cIA1)+ "
+						// IA2 = "+ convertTuple(cIA2));
+
+						// first position
+						String strConfig="";
+						String insideFile="";
+						if(population.getIdTypePopulation().equals("MainAgents"))
+						{
+							strConfig = pathCentral + "/" + "_(" + convertBasicTuple(cIA1) + ")_";
+							insideFile="_(" + convertBasicTuple(cIA1) + ")_";
+						}
+						else if(population.getIdTypePopulation().equals("MainExploiters"))
+						{
+							strConfig = pathCentral + "/" + "_{" + convertBasicTuple(cIA1) + "}_";
+							insideFile="_{" + convertBasicTuple(cIA1) + "}_";
+						}
+						else if((population.getIdTypePopulation().equals("LeagueExploiters")))
+						{
+							strConfig = pathCentral + "/" + "_[" + convertBasicTuple(cIA1) + "]_";
+							insideFile="_[" + convertBasicTuple(cIA1) + "]_";
+						}
+						
+						if(opponent.getTypePopulation().equals("MainAgents"))
+						{
+							strConfig=strConfig+"#(" + convertBasicTuple(cIA2)
+							+ ")#" + i + "#" + atualGeneration + ".txt";
+							
+							insideFile=insideFile+"#(" + convertBasicTuple(cIA2)
+							+ ")#" + i + "#" + atualGeneration;
+						}
+						else if(opponent.getTypePopulation().equals("MainExploiters"))
+						{
+							strConfig=strConfig+"#{" + convertBasicTuple(cIA2)
+							+ "}#" + i + "#" + atualGeneration + ".txt";
+							
+							insideFile=insideFile+"#{" + convertBasicTuple(cIA2)
+							+ "}#" + i + "#" + atualGeneration;
+						}
+						else if(opponent.getTypePopulation().equals("LeagueExploiters"))
+						{
+							strConfig=strConfig+"#[" + convertBasicTuple(cIA2)
+							+ "]#" + i + "#" + atualGeneration + ".txt";
+							
+							insideFile=insideFile+"#[" + convertBasicTuple(cIA2)
+							+ "]#" + i + "#" + atualGeneration;
+						}
+
+						File arqConfig = new File(strConfig);
+						if (!arqConfig.exists()) {
+							try {
+								arqConfig.createNewFile();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+						// escreve a configuraÃ§Ã£o de teste
+						try {
+							FileWriter arq = new FileWriter(arqConfig, false);
+							PrintWriter gravarArq = new PrintWriter(arq);
+
+							String infFile = insideFile;
+							gravarArq.println(infFile);
+							this.battleFiles.put(strConfig, infFile);
+
+							gravarArq.flush();
+							gravarArq.close();
+							arq.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+						// second position
+						if(opponent.getTypePopulation().equals("MainAgents"))
+						{
+							strConfig=pathCentral + "/(" + convertBasicTuple(cIA2) + ")#";
+							insideFile="(" + convertBasicTuple(cIA2) + ")#";
+						}
+						else if(opponent.getTypePopulation().equals("MainExploiters"))
+						{
+							strConfig=pathCentral + "/{" + convertBasicTuple(cIA2) + "}#";
+							insideFile="{" + convertBasicTuple(cIA2) + "}#";
+						}
+						else if(opponent.getTypePopulation().equals("LeagueExploiters"))
+						{
+							strConfig=pathCentral + "/[" + convertBasicTuple(cIA2) + "]#";
+							insideFile="[" + convertBasicTuple(cIA2) + "]#";
+						}
+						
+						if(population.getIdTypePopulation().equals("MainAgents"))
+						{
+							strConfig=strConfig+"_("+ convertBasicTuple(cIA1) + ")_#"
+									+ i + "#" + atualGeneration + ".txt";
+
+							insideFile=insideFile+"_("+ convertBasicTuple(cIA1) + ")_#"
+									+ i + "#" + atualGeneration;
+
+						}
+						else if(population.getIdTypePopulation().equals("MainExploiters"))
+						{
+							strConfig=strConfig+"_{"+ convertBasicTuple(cIA1) + "}_#"
+									+ i + "#" + atualGeneration + ".txt";
+							
+							insideFile=insideFile+"_{"+ convertBasicTuple(cIA1) + "}_#"
+									+ i + "#" + atualGeneration;
+						}
+						else if((population.getIdTypePopulation().equals("LeagueExploiters")))
+						{
+							strConfig=strConfig+"_["+ convertBasicTuple(cIA1) + "]_#"
+									+ i + "#" + atualGeneration + ".txt";
+							
+							insideFile=insideFile+"_["+ convertBasicTuple(cIA1) + "]_#"
+									+ i + "#" + atualGeneration;
+						}
+						
 //						strConfig = pathCentral + "/(" + convertBasicTuple(cIA2) + ")#" + convertBasicTuple(cIA1) + "#"
 //								+ i + "#" + atualGeneration + ".txt";
-//						arqConfig = new File(strConfig);
-//						if (!arqConfig.exists()) {
-//							try {
-//								arqConfig.createNewFile();
-//							} catch (IOException e) {
-//								e.printStackTrace();
-//							}
-//						}
-//						try {
-//							FileWriter arq = new FileWriter(arqConfig, false);
-//							PrintWriter gravarArq = new PrintWriter(arq);
-//
-//							String infFile = "(" + convertBasicTuple(cIA2) + ")#" + convertBasicTuple(cIA1) + "#" + i
-//									+ "#" + atualGeneration;
-//							gravarArq.println(infFile);
-//							this.battleFiles.put(strConfig, infFile);
-//
-//							gravarArq.flush();
-//							gravarArq.close();
-//							arq.close();
-//						} catch (IOException e) {
-//							e.printStackTrace();
-//						}
-//
-//					//}
-//
-//				}
+						
+						arqConfig = new File(strConfig);
+						if (!arqConfig.exists()) {
+							try {
+								arqConfig.createNewFile();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+						try {
+							FileWriter arq = new FileWriter(arqConfig, false);
+							PrintWriter gravarArq = new PrintWriter(arq);
+
+							String infFile = insideFile;
+							gravarArq.println(infFile);
+							this.battleFiles.put(strConfig, infFile);
+
+							gravarArq.flush();
+							gravarArq.close();
+							arq.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+
+					//}
+
+				}
 			}
 		}
 	}
@@ -766,23 +890,23 @@ public class RoundRobinEliteandSampleEval implements RatePopulation {
 			}
 		}
 		
-		System.out.println("Historic Main Agents");
-		if(historicEliteMainAgents.size()>0 )
-		{
-			printHistoricElite(historicEliteMainAgents);
-		}
-		
-		System.out.println("Historic Main Exploiters");
-		if(historicEliteMainExploiters.size()>0 )
-		{
-			printHistoricElite(historicEliteMainExploiters);
-		}
-		
-		System.out.println("Historic League Exploiters");
-		if( historicEliteLeagueExploiters.size()>0)
-		{
-			printHistoricElite(historicEliteLeagueExploiters);
-		}
+//		System.out.println("Historic Main Agents");
+//		if(historicEliteMainAgents.size()>0 )
+//		{
+//			printHistoricElite(historicEliteMainAgents);
+//		}
+//		
+//		System.out.println("Historic Main Exploiters");
+//		if(historicEliteMainExploiters.size()>0 )
+//		{
+//			printHistoricElite(historicEliteMainExploiters);
+//		}
+//		
+//		System.out.println("Historic League Exploiters");
+//		if( historicEliteLeagueExploiters.size()>0)
+//		{
+//			printHistoricElite(historicEliteLeagueExploiters);
+//		}
 	}
 	
 	public void printOpponents()
