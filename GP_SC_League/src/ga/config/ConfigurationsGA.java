@@ -48,6 +48,6 @@ public final class ConfigurationsGA {
 	
      public static final int iterationsForLeague=5;
      
-     public static final int numberOfTraces=2;
+     public static final int numberOfTraces=10;
 	
 }

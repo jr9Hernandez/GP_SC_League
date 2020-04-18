@@ -120,6 +120,10 @@ public class RunTests_SetCover_GP {
 		//fEval = new SetCoverEval();
 		
 		//rodamos o GA
+		
+		System.out.println("format final commands: "+scriptsSetCover);
+		
+		System.out.println("format final booleans: "+sc.booleansUsed.toString());
 		ArrayList<Population> popFinal = ga.run(fEval,scriptsSetCover,sc.booleansUsed);
 		
 		//popFinal.printWithValue();
