@@ -1,7 +1,12 @@
 package principal;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,6 +16,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+
+import javax.lang.model.util.Elements;
 
 import SetCoverSampling.DataRecollection;
 import SetCoverSampling.GameSampling;
@@ -41,7 +48,8 @@ public class RunTests_SetCover_GP {
 	private static final String pathTableLeagueExploiters = System.getProperty("user.dir").concat("/TableLeagueExploiters/");
 	private final static String pathLogsBestPortfolios = System.getProperty("user.dir").concat("/TrackingPortfolios/TrackingPortfolios.txt");
 	private final static String dirPathPlayer = System.getProperty("user.dir").concat("/logs_game/logs_states/");
-
+	private final static String pathFixedTrace = System.getProperty("user.dir").concat("/FixedTrace/FixedTrace.txt");
+	
 	public static void main(String[] args) {
 
 	
@@ -53,29 +61,37 @@ public class RunTests_SetCover_GP {
 		File file=new File(dirPathPlayer);
 		GameSampling.deleteFolder(file);
 		
-		//Here we play with a search-based algorithm and save the path
-		for(int i=0;i<ConfigurationsGA.numberOfTraces;i++)
+		if(!ConfigurationsGA.fixedTrace)
 		{
-			try {
-				RunSampling sampling=new RunSampling(0,pathTableScriptsInit,curriculumportfolio);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			//Here we play with a search-based algorithm and save the path
+			for(int i=0;i<ConfigurationsGA.numberOfTraces;i++)
+			{
+				try {
+					RunSampling sampling=new RunSampling(0,pathTableScriptsInit,curriculumportfolio);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
-		
 		
 		
 
 		for(int i=1;i<ConfigurationsGA.LOOPS_SELFPLAY;i++)
 		{
 			
+		String scriptsSetCover="";
+		HashSet<String> booleansUsedRedefined=new HashSet<>();
+		if(!ConfigurationsGA.fixedTrace)
+		{
 		//SC
-		RunScriptByState sc = new RunScriptByState();
+			RunScriptByState sc = new RunScriptByState();
 		
-		RunSetCoverCalculation scCalculation = new RunSetCoverCalculation(sc.dataH);
-		List<Integer> setCover=scCalculation.getSetCover();
-		String scriptsSetCover=setCover.toString();
+			RunSetCoverCalculation scCalculation = new RunSetCoverCalculation(sc.dataH);
+			List<Integer> setCover=scCalculation.getSetCover();
+			scriptsSetCover=setCover.toString();
+			booleansUsedRedefined=sc.booleansUsed;
+		}
 		
 		if(Files.exists(Paths.get(pathTableMainAgents+"ScriptsTable.txt"))) { 
 			Path source = Paths.get(pathTableMainAgents+"ScriptsTable.txt");
@@ -121,10 +137,35 @@ public class RunTests_SetCover_GP {
 		
 		//rodamos o GA
 		
+		if(ConfigurationsGA.fixedTrace)
+		{
+			File arqTour = new File(pathFixedTrace);
+
+			try {
+				FileReader arq = new FileReader(arqTour);
+				BufferedReader bf = new BufferedReader(arq);
+
+				scriptsSetCover = bf.readLine();
+				String booleansUsedLine= bf.readLine();
+				String [] parts=booleansUsedLine.split("\\s+");
+				
+				for(String element:parts)
+				{	
+					element=element.substring(0, element.length() - 1);
+					booleansUsedRedefined.add(element.trim());
+				}
+				arq.close();
+
+			} catch (Exception e) {
+				System.out.println(e.toString());
+			}
+
+		}
+		
 		System.out.println("format final commands: "+scriptsSetCover);
 		
-		System.out.println("format final booleans: "+sc.booleansUsed.toString());
-		ArrayList<Population> popFinal = ga.run(fEval,scriptsSetCover,sc.booleansUsed);
+		System.out.println("format final booleans: "+booleansUsedRedefined.toString());
+		ArrayList<Population> popFinal = ga.run(fEval,scriptsSetCover,booleansUsedRedefined);
 		
 		//popFinal.printWithValue();
 		

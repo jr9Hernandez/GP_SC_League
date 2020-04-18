@@ -1,6 +1,6 @@
 New Loop
 Player0
- for(u) (if(HaveQtdUnitsbyType(Light,16,u)) (moveToUnit(Worker,Enemy,strongest,u)) (moveToUnit(Heavy,Enemy,mostHealthy,u) moveToUnit(Worker,Enemy,strongest,u)) if(HaveUnitsToDistantToEnemy(Worker,17,u)) (moveToUnit(Worker,Ally,mostHealthy,u)) (train(Worker,50,EnemyDir,u)) train(Heavy,50,EnemyDir,u))
+ if(HaveUnitsToDistantToEnemy(Worker,14)) (attack(Light,mostHealthy)) train(Ranged,50,Right)
 Player1
- for(u) (if(HaveQtdUnitsbyType(Light,16,u)) (moveToUnit(Worker,Enemy,strongest,u)) (moveToUnit(Heavy,Enemy,mostHealthy,u) moveToUnit(Worker,Enemy,strongest,u)) if(HaveUnitsToDistantToEnemy(Worker,17,u)) (moveToUnit(Worker,Ally,mostHealthy,u)) (train(Worker,50,EnemyDir,u)) train(Heavy,50,EnemyDir,u))
+ if(HaveUnitsToDistantToEnemy(Worker,14)) (attack(Light,mostHealthy)) train(Ranged,50,Right)
 
