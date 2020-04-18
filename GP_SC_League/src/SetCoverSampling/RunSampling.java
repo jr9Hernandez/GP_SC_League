@@ -12,10 +12,9 @@ public class RunSampling {
 	
 	static DataRecollection dataRecollection;
 	
-	
 	public RunSampling(int pathLogInt, String pathTableSetCover, String curriculumPortfolio) throws IOException {
 		
-		
+	
 		//Here we collect the data
 		String pathLog=String.valueOf(pathLogInt);
 		dataRecollection=new DataRecollection(pathLog,pathTableSetCover);

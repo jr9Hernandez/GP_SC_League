@@ -105,7 +105,7 @@ public class GameSampling {
         PERIOD = 20;        
         File file=new File(dirPathPlayer);
         this.pathTableScripts=pathTableScripts;
-        deleteFolder(file);
+        //deleteFolder(file);
     }
 
     public void run(String portfolioPlayer1, String portfolioPlayer2, String pathLog, boolean isInitialRandomGame) throws Exception {
@@ -323,7 +323,7 @@ public class GameSampling {
             */
           //avaliacao de tempo
             duracao = Duration.between(timeInicial, Instant.now());
-        } while (!gameover && (gs.getTime() < MAXCYCLES) && (duracao.toMillis() < 1200000));
+        } while (!gameover && (gs.getTime() < MAXCYCLES) && (duracao.toMillis() < 12000));
         //&& (duracao.toMillis() < 40000)
 
         System.out.println("Game Over");

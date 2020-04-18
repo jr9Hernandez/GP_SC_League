@@ -616,7 +616,7 @@ public class RoundRobinEliteandSampleEval implements RatePopulation {
 		}
 		else if(population.getIdTypePopulation().equals("MainExploiters"))
 		{
-			System.out.println("Defining opponents for Main Exploiters"+eliteIndividualsMainAgents.size());
+			System.out.println("Defining opponents for Main Exploiters");
 			if(eliteIndividualsMainAgents.size()>0)
 			{
 				arrayOpponentsTemp.addAll(historicEliteMainAgents.get(historicEliteMainAgents.size()-1).entrySet());
@@ -673,7 +673,7 @@ public class RoundRobinEliteandSampleEval implements RatePopulation {
 	}
 
 	private ArrayList<OpponentInLeague> completeWithRandomElementsFromPast(ArrayList<OpponentInLeague> arrayOpponents) {
-				
+		
 		Random r=new Random();
 		
 		while(arrayOpponents.size()<ConfigurationsGA.SIZE_ELITE)

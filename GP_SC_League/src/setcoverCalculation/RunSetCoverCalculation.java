@@ -32,7 +32,7 @@ public class RunSetCoverCalculation {
 //		System.out.println(data.size());
 		DataFormatting sc=new DataFormatting(data,basicFunctions.size());
 		sc.fillMatrix();
-		//sc.printMatrix();		
+//		sc.printMatrix();		
 		
 		/*File[] files = new File("samplings").listFiles();		
 		List<List<String>> data=objData.loadDataFromSampling(files);

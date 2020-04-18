@@ -40,7 +40,7 @@ public class RunTests_SetCover_GP {
 	private static final String pathTableMainExploiters = System.getProperty("user.dir").concat("/TableMainExploiters/");
 	private static final String pathTableLeagueExploiters = System.getProperty("user.dir").concat("/TableLeagueExploiters/");
 	private final static String pathLogsBestPortfolios = System.getProperty("user.dir").concat("/TrackingPortfolios/TrackingPortfolios.txt");
-
+	private final static String dirPathPlayer = System.getProperty("user.dir").concat("/logs_game/logs_states/");
 
 	public static void main(String[] args) {
 
@@ -50,12 +50,18 @@ public class RunTests_SetCover_GP {
 		File logsBestPortfolios=new File(pathLogsBestPortfolios);
 		GameSampling.deleteFolder(logsBestPortfolios);
 		
+		File file=new File(dirPathPlayer);
+		GameSampling.deleteFolder(file);
+		
 		//Here we play with a search-based algorithm and save the path
-		try {
-			RunSampling sampling=new RunSampling(0,pathTableScriptsInit,curriculumportfolio);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		for(int i=0;i<ConfigurationsGA.numberOfTraces;i++)
+		{
+			try {
+				RunSampling sampling=new RunSampling(0,pathTableScriptsInit,curriculumportfolio);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		
