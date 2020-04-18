@@ -108,7 +108,7 @@ public class ScriptsTable {
 			f0 = new PrintWriter(new FileWriter(pathTableScripts+"ScriptsTable.txt"));
 
 			int i=0;
-			while(i<30)
+			while(i<1000)
 			{
 				//tChom = new ChromosomeScript();				
 				//int sizeCh=rand.nextInt(ConfigurationsGA.SIZE_CHROMOSOME_SCRIPT)+1;
