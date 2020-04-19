@@ -151,7 +151,8 @@ public class RunTests_SetCover_GP {
 				
 				for(String element:parts)
 				{	
-					element=element.substring(0, element.length() - 1);
+					if(element.substring(element.length() - 1).equals(","))
+						element=element.substring(0, element.length() - 1);
 					booleansUsedRedefined.add(element.trim());
 				}
 				arq.close();
