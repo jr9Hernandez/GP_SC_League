@@ -686,63 +686,105 @@ public class RoundRobinEliteandSampleEval implements RatePopulation {
 			{
 				if(historicEliteMainAgents.size()>0)
 				{
-					int generationFromPast=r.nextInt(historicEliteMainAgents.size());
+					int generationFromPast=0;
+					if(historicEliteMainAgents.size()>1)
+					{
+						generationFromPast=r.nextInt(historicEliteMainAgents.size()-1);
+					}
+					else
+					{
+						generationFromPast=r.nextInt(historicEliteMainAgents.size());
+					}
 					eliteFromPast=historicEliteMainAgents.get(generationFromPast);
 					eliteChromosomesFromPast.addAll(eliteFromPast.entrySet());
-					OpponentInLeague opponentToAdd=new OpponentInLeague(eliteChromosomesFromPast.get(r.nextInt(eliteChromosomesFromPast.size())), "MainAgents",generationFromPast);
-					boolean opponentExist=false;
-					for(OpponentInLeague opp: arrayOpponents)
-					{
-						if((opp.getEntryChromosome().getKey()==opponentToAdd.getEntryChromosome().getKey()) && (opp.getTypePopulation()==opponentToAdd.getTypePopulation()))
-							opponentExist=true;
-						
-					}
-					if(!opponentExist)
-						arrayOpponents.add(opponentToAdd);
+					int idCandidate = 0;
+					boolean opponentExist = false;
+					do {
+						OpponentInLeague opponentToAdd = new OpponentInLeague(eliteChromosomesFromPast.get(idCandidate), "MainAgents", generationFromPast);
+						opponentExist = false;
+						for (OpponentInLeague opp : arrayOpponents) {
+							if (opp.getEntryChromosome().getKey() == opponentToAdd.getEntryChromosome().getKey() && opp.getTypePopulation() == opponentToAdd.getTypePopulation())
+								opponentExist = true; 
+						} 
+						if (!opponentExist)
+						{
+							arrayOpponents.add(opponentToAdd); 
+							opponentExist = false;
+						}
+						idCandidate++;
+					} while (opponentExist);
 				}
-			
+
 			}
-		
+
 			//population Main Exploiters
 			else if(typePopulationChosen==1)
 			{
 				if(historicEliteMainExploiters.size()>0)
 				{
-					int generationFromPast=r.nextInt(historicEliteMainExploiters.size());
+					int generationFromPast=0;
+					if(historicEliteMainExploiters.size()>1)
+					{
+						generationFromPast=r.nextInt(historicEliteMainExploiters.size()-1);
+					}
+					else
+					{
+						generationFromPast=r.nextInt(historicEliteMainExploiters.size());
+					}
 					eliteFromPast=historicEliteMainExploiters.get(generationFromPast);
 					eliteChromosomesFromPast.addAll(eliteFromPast.entrySet());
-					OpponentInLeague opponentToAdd=new OpponentInLeague(eliteChromosomesFromPast.get(r.nextInt(eliteChromosomesFromPast.size())), "MainExploiters",generationFromPast);
-					boolean opponentExist=false;
-					for(OpponentInLeague opp: arrayOpponents)
-					{
-						if((opp.getEntryChromosome().getKey()==opponentToAdd.getEntryChromosome().getKey()) && (opp.getTypePopulation()==opponentToAdd.getTypePopulation()))
-							opponentExist=true;
-						
-					}
-					if(!opponentExist)
-						arrayOpponents.add(opponentToAdd);
+					int idCandidate = 0;
+					boolean opponentExist = false;
+					do {
+						OpponentInLeague opponentToAdd = new OpponentInLeague(eliteChromosomesFromPast.get(idCandidate), "MainExploiters", generationFromPast);
+						opponentExist = false;
+						for (OpponentInLeague opp : arrayOpponents) {
+							if (opp.getEntryChromosome().getKey() == opponentToAdd.getEntryChromosome().getKey() && opp.getTypePopulation() == opponentToAdd.getTypePopulation())
+								opponentExist = true; 
+						} 
+						if (!opponentExist)
+						{
+							arrayOpponents.add(opponentToAdd); 
+							opponentExist = false;
+						}
+						idCandidate++;
+					} while (opponentExist);
 				}
 			}
 		
 			//population League Exploiters
 			else if(typePopulationChosen==2)
 			{
-				if(historicEliteLeagueExploiters.size()>0)
+				if(historicEliteMainAgents.size()>0)
 				{
-					int generationFromPast=r.nextInt(historicEliteLeagueExploiters.size());
+					int generationFromPast=0;
+					if(historicEliteMainAgents.size()>1)
+					{
+						generationFromPast=r.nextInt(historicEliteLeagueExploiters.size()-1);
+					}
+					else
+					{
+						generationFromPast=r.nextInt(historicEliteLeagueExploiters.size());
+					}
 					eliteFromPast=historicEliteLeagueExploiters.get(generationFromPast);
 					eliteChromosomesFromPast.addAll(eliteFromPast.entrySet());
-					OpponentInLeague opponentToAdd=new OpponentInLeague(eliteChromosomesFromPast.get(r.nextInt(eliteChromosomesFromPast.size())), "LeagueExploiters",generationFromPast);
-					boolean opponentExist=false;
-					for(OpponentInLeague opp: arrayOpponents)
-					{
-						if((opp.getEntryChromosome().getKey()==opponentToAdd.getEntryChromosome().getKey()) && (opp.getTypePopulation()==opponentToAdd.getTypePopulation()))
-							opponentExist=true;
-						
-					}
-					if(!opponentExist)
-						arrayOpponents.add(opponentToAdd);
-				}			
+					int idCandidate = 0;
+					boolean opponentExist = false;
+					do {
+						OpponentInLeague opponentToAdd = new OpponentInLeague(eliteChromosomesFromPast.get(idCandidate), "LeagueExploiters", generationFromPast);
+						opponentExist = false;
+						for (OpponentInLeague opp : arrayOpponents) {
+							if (opp.getEntryChromosome().getKey() == opponentToAdd.getEntryChromosome().getKey() && opp.getTypePopulation() == opponentToAdd.getTypePopulation())
+								opponentExist = true; 
+						} 
+						if (!opponentExist)
+						{
+							arrayOpponents.add(opponentToAdd); 
+							opponentExist = false;
+						}
+						idCandidate++;
+					} while (opponentExist);
+				}		
 			}
 		}
 		return arrayOpponents;
