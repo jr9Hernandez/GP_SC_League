@@ -755,10 +755,10 @@ public class RoundRobinEliteandSampleEval implements RatePopulation {
 			//population League Exploiters
 			else if(typePopulationChosen==2)
 			{
-				if(historicEliteMainAgents.size()>0)
+				if(historicEliteLeagueExploiters.size()>0)
 				{
 					int generationFromPast=0;
-					if(historicEliteMainAgents.size()>1)
+					if(historicEliteLeagueExploiters.size()>1)
 					{
 						generationFromPast=r.nextInt(historicEliteLeagueExploiters.size()-1);
 					}
