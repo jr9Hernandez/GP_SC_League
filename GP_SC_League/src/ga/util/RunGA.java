@@ -79,13 +79,13 @@ public class RunGA {
 		// Creating the table of scripts
 		scrTableMainAgents = new ScriptsTable(pathTableMainAgents);
 		scrTableMainExploiters = new ScriptsTable(pathTableMainExploiters);
-		scrTableLeagueExploiters = new ScriptsTable(pathTableLeagueExploiters);
+		//scrTableLeagueExploiters = new ScriptsTable(pathTableLeagueExploiters);
 		//do {
 			if(ConfigurationsGA.portfolioSetCover)
 			{
 				scrTableMainAgents = scrTableMainAgents.generateScriptsTableFromSetCover(ConfigurationsGA.SIZE_TABLE_SCRIPTS,scriptsSetCover,booleansUsed,curriculumportfolio);
 				scrTableMainExploiters = scrTableMainExploiters.generateScriptsTableFromSetCover(ConfigurationsGA.SIZE_TABLE_SCRIPTS,scriptsSetCover,booleansUsed,curriculumportfolio);
-				scrTableLeagueExploiters = scrTableLeagueExploiters.generateScriptsTableFromSetCover(ConfigurationsGA.SIZE_TABLE_SCRIPTS,scriptsSetCover,booleansUsed,curriculumportfolio);
+				//scrTableLeagueExploiters = scrTableLeagueExploiters.generateScriptsTableFromSetCover(ConfigurationsGA.SIZE_TABLE_SCRIPTS,scriptsSetCover,booleansUsed,curriculumportfolio);
 			}
 			else
 			{
@@ -93,27 +93,27 @@ public class RunGA {
 				{
 					scrTableMainAgents = scrTableMainAgents.generateScriptsTable(ConfigurationsGA.SIZE_TABLE_SCRIPTS);
 					scrTableMainExploiters = scrTableMainExploiters.generateScriptsTable(ConfigurationsGA.SIZE_TABLE_SCRIPTS);
-					scrTableLeagueExploiters = scrTableLeagueExploiters.generateScriptsTable(ConfigurationsGA.SIZE_TABLE_SCRIPTS);
+					//scrTableLeagueExploiters = scrTableLeagueExploiters.generateScriptsTable(ConfigurationsGA.SIZE_TABLE_SCRIPTS);
 				}
 				else
 				{
 					scrTableMainAgents = scrTableMainAgents.generateScriptsTableRecover();
 					scrTableMainExploiters = scrTableMainExploiters.generateScriptsTableRecover();
-					scrTableLeagueExploiters = scrTableLeagueExploiters.generateScriptsTableRecover();
+					//scrTableLeagueExploiters = scrTableLeagueExploiters.generateScriptsTableRecover();
 				}
 			}
 		   //}while(scrTable.checkDiversityofTypes());
 		scrTableMainAgents.setCurrentSizeTable(scrTableMainAgents.getScriptTable().size());
 		scrTableMainExploiters.setCurrentSizeTable(scrTableMainExploiters.getScriptTable().size());
-		scrTableLeagueExploiters.setCurrentSizeTable(scrTableLeagueExploiters.getScriptTable().size());
+		//scrTableLeagueExploiters.setCurrentSizeTable(scrTableLeagueExploiters.getScriptTable().size());
 
 		PrintWriter fMainAgents;
 		PrintWriter fMainExploiters;
-		PrintWriter fLeagueExploiters;
+		//PrintWriter fLeagueExploiters;
 		try {
 			fMainAgents = new PrintWriter(new FileWriter(pathLogsMainAgents+"Tracking.txt"));
 			fMainExploiters = new PrintWriter(new FileWriter(pathLogsMainExploiters+"Tracking.txt"));
-			fLeagueExploiters = new PrintWriter(new FileWriter(pathLogsLeagueExploiters+"Tracking.txt"));
+			//fLeagueExploiters = new PrintWriter(new FileWriter(pathLogsLeagueExploiters+"Tracking.txt"));
 
 		do {
 			// Fase 1 = gerar a população inicial
@@ -121,31 +121,31 @@ public class RunGA {
 			{
 				populationMainAgents = Population.getInitialPopulation(ConfigurationsGA.SIZE_POPULATION, scrTableMainAgents);
 				populationMainExploiters = Population.getInitialPopulation(ConfigurationsGA.SIZE_POPULATION, scrTableMainExploiters);
-				populationLeagueExploiters = Population.getInitialPopulation(ConfigurationsGA.SIZE_POPULATION, scrTableLeagueExploiters);
+				//populationLeagueExploiters = Population.getInitialPopulation(ConfigurationsGA.SIZE_POPULATION, scrTableLeagueExploiters);
 			}
 			else
 			{
 				populationMainAgents = Population.getInitialPopulationCurriculum(ConfigurationsGA.SIZE_POPULATION, scrTableMainAgents, pathInitialPopulation);
 				populationMainExploiters = Population.getInitialPopulationCurriculum(ConfigurationsGA.SIZE_POPULATION, scrTableMainExploiters, pathInitialPopulation);
-				populationLeagueExploiters = Population.getInitialPopulationCurriculum(ConfigurationsGA.SIZE_POPULATION, scrTableLeagueExploiters, pathInitialPopulation);
+				//populationLeagueExploiters = Population.getInitialPopulationCurriculum(ConfigurationsGA.SIZE_POPULATION, scrTableLeagueExploiters, pathInitialPopulation);
 			}			
 			populationMainAgents.setIdTypePopulation("MainAgents");
 			populationMainExploiters.setIdTypePopulation("MainExploiters");
-			populationLeagueExploiters.setIdTypePopulation("LeagueExploiters");
+			//populationLeagueExploiters.setIdTypePopulation("LeagueExploiters");
 
 			// Fase 2 = avalia a população
 			evalFunction.setEliteByPopulation(eliteMainAgents, "MainAgents");
 			evalFunction.setEliteByPopulation(eliteMainExploiters, "MainExploiters");
-			evalFunction.setEliteByPopulation(eliteLeagueExploiters, "LeagueExploiters");
+			//evalFunction.setEliteByPopulation(eliteLeagueExploiters, "LeagueExploiters");
 			
 			populationMainAgents = evalFunction.evalPopulation(populationMainAgents, this.generations, scrTableMainAgents,0);	
 			populationMainExploiters = evalFunction.evalPopulation(populationMainExploiters, this.generations, scrTableMainExploiters,0);	
-			populationLeagueExploiters = evalFunction.evalPopulation(populationLeagueExploiters, this.generations, scrTableLeagueExploiters,0);	
+			//populationLeagueExploiters = evalFunction.evalPopulation(populationLeagueExploiters, this.generations, scrTableLeagueExploiters,0);	
 	
 			System.out.println("printing before removing");
 			populationMainAgents.printWithValue(fMainAgents);
 			populationMainExploiters.printWithValue(fMainExploiters);
-			populationLeagueExploiters.printWithValue(fLeagueExploiters);
+			//populationLeagueExploiters.printWithValue(fLeagueExploiters);
 //			System.out.println("sep");
 			
 			//Get all the used commands
@@ -153,7 +153,7 @@ public class RunGA {
 			{
 				populationMainAgents.fillAllCommands(pathTableMainAgents);
 				populationMainExploiters.fillAllCommands(pathTableMainExploiters);
-				populationLeagueExploiters.fillAllCommands(pathTableLeagueExploiters);
+				//populationLeagueExploiters.fillAllCommands(pathTableLeagueExploiters);
 			}
 //		    Iterator it = population.getAllCommandsperGeneration().entrySet().iterator();
 //		    while (it.hasNext()) {
@@ -167,7 +167,7 @@ public class RunGA {
 			{
 				populationMainAgents.chooseusedCommands(pathUsedCommandsMainAgents);
 				populationMainExploiters.chooseusedCommands(pathUsedCommandsMainExploiters);
-				populationLeagueExploiters.chooseusedCommands(pathUsedCommandsLeagueExploiters);
+				//populationLeagueExploiters.chooseusedCommands(pathUsedCommandsLeagueExploiters);
 			}
 				
 //		    Iterator it = population.getUsedCommandsperGeneration().entrySet().iterator();
@@ -184,7 +184,7 @@ public class RunGA {
 			{
 				populationMainAgents.removeCommands(scrTableMainAgents);
 				populationMainExploiters.removeCommands(scrTableMainExploiters);
-				populationLeagueExploiters.removeCommands(scrTableLeagueExploiters);
+				//populationLeagueExploiters.removeCommands(scrTableLeagueExploiters);
 			}
 			
 //		    Iterator it2 = population.getAllCommandsperGeneration().entrySet().iterator();
@@ -207,15 +207,14 @@ public class RunGA {
 			populationMainExploiters.printWithValue(fMainExploiters);
 			fMainExploiters.flush();
 			
-			System.out.println("Log - Generation = " + this.generations);
-			fLeagueExploiters.println("Log - Generation = " + this.generations);
-			fLeagueExploiters.println("population League Exploiters ");
-			populationLeagueExploiters.printWithValue(fLeagueExploiters);
-			fLeagueExploiters.flush();
+//			System.out.println("Log - Generation = " + this.generations);
+//			fLeagueExploiters.println("Log - Generation = " + this.generations);
+//			fLeagueExploiters.println("population League Exploiters ");
+//			populationLeagueExploiters.printWithValue(fLeagueExploiters);
+//			fLeagueExploiters.flush();
 
 			
-		} while (resetPopulation(populationMainAgents) || resetPopulation(populationMainExploiters) || 
-				resetPopulation(populationLeagueExploiters));
+		} while (resetPopulation(populationMainAgents) || resetPopulation(populationMainExploiters) );
 
 		updateGeneration();
 		resetControls();
@@ -223,14 +222,14 @@ public class RunGA {
 		int counterIterationsBeforeChangeGeneration=1;
 		int counterGenerationsMainAgents=1;
 		int counterGenerationsMainExploiters=1;
-		int counterGenerationsLeagueExploiters=1;
+		//int counterGenerationsLeagueExploiters=1;
 		String currentPopulation="MainAgents";
 		while (continueProcess()) {
 
 			// Fase 4 = Seleção (Aplicar Cruzamento e Mutação)
 			Selection selecaoMainAgents = new Selection();
 			Selection selecaoMainExploiters = new Selection();
-			Selection selecaoLeagueExploiters = new Selection();
+			//Selection selecaoLeagueExploiters = new Selection();
 			
 			
 
@@ -246,11 +245,11 @@ public class RunGA {
 				counterGenerationsMainExploiters++;
 			}
 			
-			else if(currentPopulation=="LeagueExploiters")
-			{
-				populationLeagueExploiters=applyIterationbyPopulation(currentPopulation,populationLeagueExploiters, scrTableLeagueExploiters, pathTableLeagueExploiters, selecaoLeagueExploiters, eliteLeagueExploiters, pathUsedCommandsLeagueExploiters,fLeagueExploiters, counterGenerationsLeagueExploiters, evalFunction);
-				counterGenerationsLeagueExploiters++;
-			}
+//			else if(currentPopulation=="LeagueExploiters")
+//			{
+//				populationLeagueExploiters=applyIterationbyPopulation(currentPopulation,populationLeagueExploiters, scrTableLeagueExploiters, pathTableLeagueExploiters, selecaoLeagueExploiters, eliteLeagueExploiters, pathUsedCommandsLeagueExploiters,fLeagueExploiters, counterGenerationsLeagueExploiters, evalFunction);
+//				counterGenerationsLeagueExploiters++;
+//			}
 			
 			if(ConfigurationsGA.UCB1==true)
 			{
@@ -269,19 +268,19 @@ public class RunGA {
 				}
 				else if(currentPopulation=="MainExploiters")
 				{
-					currentPopulation="LeagueExploiters";
-				}
-				else if(currentPopulation=="LeagueExploiters")
-				{
 					currentPopulation="MainAgents";
 				}
+//				else if(currentPopulation=="LeagueExploiters")
+//				{
+//					currentPopulation="MainAgents";
+//				}
 			}
 		}
 
 		
 		fMainAgents.close();
 		fMainExploiters.close();
-		fLeagueExploiters.close();
+		//fLeagueExploiters.close();
 		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -290,7 +289,7 @@ public class RunGA {
 		
 		league.add(populationMainAgents);
 		league.add(populationMainExploiters);
-		league.add(populationLeagueExploiters);
+		//league.add(populationLeagueExploiters);
 		
 
 
@@ -336,7 +335,7 @@ public class RunGA {
 		}
 
 		// atualiza a geração
-		if(currentPopulation=="LeagueExploiters")
+		if(currentPopulation=="MainExploiters")
 			updateGeneration();
 
 		System.out.println("Log - Population "+currentPopulation+" - Generation = " + counterGenerationLeague);

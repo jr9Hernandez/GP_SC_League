@@ -678,7 +678,7 @@ public class RoundRobinEliteandSampleEval implements RatePopulation {
 		
 		while(arrayOpponents.size()<ConfigurationsGA.SIZE_ELITE)
 		{
-			int typePopulationChosen =r.nextInt(3);
+			int typePopulationChosen =r.nextInt(2);
 			HashMap<Chromosome, BigDecimal> eliteFromPast=new HashMap<Chromosome, BigDecimal>();
 			ArrayList<Entry<Chromosome, BigDecimal>> eliteChromosomesFromPast=new ArrayList<Entry<Chromosome, BigDecimal>>();
 			//population Main Agents 
